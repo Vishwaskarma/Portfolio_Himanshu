@@ -1,5 +1,5 @@
-import React from 'react';
-import { ExternalLink, Github, TrendingUp, Users, Zap, Award } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { ExternalLink, Github, Sparkles, Code2, Rocket, Award, Users, Zap, Star } from 'lucide-react';
 
 /* ─── Black & Orange Palette ─────────────────────────────── */
 const ACCENT_ORANGE = '#F97316';
@@ -12,329 +12,462 @@ const TEXT_GRAY = '#A1A1AA';
 /* ─────────────────────────────────────────────────────────── */
 
 export default function ProjectsSection() {
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsVisible(true), 100);
+    return () => clearTimeout(timer);
+  }, []);
+
   const projects = [
     {
       title: 'MahaaGromart',
       company: 'MAIDC',
-      tech: ['.NET 8', 'ASP.NET Core', 'Next.js', 'AWS', 'Razorpay', 'Jenkins', 'CI/CD'],
-      description:
-        'Agricultural e-commerce platform revolutionizing farm-to-consumer supply chain with integrated payment processing and smart logistics.',
-      features: [
-        'Razorpay Payment Integration',
-        'eKart Logistics Integration',
-        'Real-time Analytics Dashboard',
-        'Scalable Cloud Architecture',
-      ],
-      metrics: {
-        transactions: '1000+ Daily',
-        growth: '20% User Growth',
-        status: 'Production',
-      },
-      gradient: 'from-orange-600 via-amber-600 to-yellow-600',
-      icon: TrendingUp,
-      period: 'Dec 2024 - Present',
+      tech: ['.NET 8', 'Next.js', 'AWS', 'Razorpay'],
+      description: 'Agricultural e-commerce platform revolutionizing farm-to-consumer supply chain.',
+      features: ['Payment Gateway', 'Logistics API', 'Analytics', 'Cloud Infra'],
+      metrics: { transactions: '1000+', growth: '20%' },
+      gradient: 'from-orange-600 via-amber-500 to-yellow-500',
+      icon: Rocket,
+      period: 'Dec 2024',
+      color: ACCENT_ORANGE,
+      projectUrl: 'https://new.mahaagromart.com',
+      githubUrl: null,
     },
     {
-      title: 'Indian Rubber Materials Research Institute Portal',
+      title: 'IRMR Institute Portal',
       company: 'Design Accent',
-      tech: ['ASP.NET MVC', 'AngularJS', 'SQL Server', 'RBAC', 'Security'],
-      description:
-        'Enterprise research data management system with advanced security features and compliance-ready dashboards for rubber industry research.',
-      features: [
-        'Role-Based Access Control',
-        'Compliance Dashboards',
-        'Secure Data Management',
-        'Optimized SQL Queries',
-      ],
-      metrics: {
-        performance: '50% Faster Reports',
-        security: 'Enterprise-Grade',
-        status: 'Production',
-      },
-      gradient: 'from-blue-600 via-indigo-600 to-purple-600',
+      tech: ['ASP.NET', 'AngularJS', 'SQL Server'],
+      description: 'Enterprise research data management with advanced security features.',
+      features: ['RBAC', 'Dashboards', 'Secure Storage', 'SQL Optimization'],
+      metrics: { performance: '50%', security: 'A+' },
+      gradient: 'from-blue-600 via-indigo-500 to-purple-600',
       icon: Award,
-      period: 'Nov 2023 - Dec 2024',
+      period: 'Nov 2023',
+      color: '#6366f1',
+      projectUrl: 'https://irmri.org',
+      githubUrl: null,
     },
     {
       title: 'Events Genie',
       company: 'Design Accent',
-      tech: ['ASP.NET MVC', 'AngularJS', 'MS SQL Server', 'WebSocket', 'Real-time Chat'],
-      description:
-        'Virtual event platform enabling seamless online conferences and meetings with real-time communication and high-performance architecture.',
-      features: [
-        'Real-time Chat System',
-        'WebSocket Communication',
-        'Multi-user Support',
-        'Engagement Analytics',
-      ],
-      metrics: {
-        users: '500+ Concurrent',
-        engagement: '40% Increase',
-        status: 'Production',
-      },
-      gradient: 'from-emerald-600 via-green-600 to-teal-600',
+      tech: ['ASP.NET', 'WebSocket', 'Real-time'],
+      description: 'Virtual event platform with real-time communication architecture.',
+      features: ['Real-time Chat', 'WebSocket', 'Multi-user', 'Analytics'],
+      metrics: { users: '500+', engagement: '40%' },
+      gradient: 'from-emerald-600 via-green-500 to-teal-500',
       icon: Users,
-      period: 'Nov 2023 - Dec 2024',
+      period: 'Nov 2023',
+      color: '#10b981',
+      projectUrl: 'https://www.eventsgenie.in',
+      githubUrl: null,
     },
   ];
 
-  /* ─── Single Project Card ──────────────────────────── */
-  const Card = ({ p, delay }) => (
-    <div
-      className="group transition-all duration-600 animate-fade-in-up"
-      style={{ animationDelay: `${delay}ms` }}
-    >
+  const Card = ({ p, index }) => {
+    return (
       <div
-        className="rounded-3xl overflow-hidden shadow-2xl hover:shadow-orange-500/20
-                   hover:scale-[1.02] transition-all duration-300 backdrop-blur-sm relative"
-        style={{
-          background: `linear-gradient(135deg, ${BG_CARD} 0%, ${BG_BLACK} 100%)`,
-          border: `1px solid ${BORDER}`,
+        className={`relative transition-all duration-1000 ease-out ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'
+        }`}
+        style={{ 
+          transitionDelay: `${index * 150}ms`,
         }}
       >
-        {/* Cover with gradient */}
-        <div className={`relative h-64 bg-gradient-to-br ${p.gradient}`}>
-          <div className="absolute inset-0 bg-black/40" />
-          
-          {/* Status badge */}
-          <span
-            className="absolute top-5 left-5 px-4 py-1.5 text-sm font-semibold rounded-full backdrop-blur-sm"
-            style={{ 
-              background: ACCENT_ORANGE + 'E6', 
-              color: '#fff',
-              boxShadow: `0 4px 12px ${ACCENT_ORANGE}40`
+        {/* FIXED: Card with proper z-index */}
+        <div
+          className="relative rounded-2xl overflow-hidden"
+          style={{
+            background: `linear-gradient(135deg, ${BG_CARD}98 0%, ${BG_BLACK}99 100%)`,
+            border: `1px solid ${BORDER}`,
+            boxShadow: '0 12px 32px -10px rgba(0, 0, 0, 0.7)',
+            position: 'relative',
+            zIndex: 1,
+          }}
+        >
+          {/* FIXED: Background overlay with lower z-index */}
+          <div 
+            style={{
+              position: 'absolute',
+              inset: 0,
+              opacity: 0.04,
+              background: `radial-gradient(circle at top right, ${p.color}, transparent 70%)`,
+              zIndex: 0,
+              pointerEvents: 'none',
+            }}
+          />
+
+          {/* Header */}
+          <div 
+            style={{
+              position: 'relative',
+              height: '180px',
+              background: `linear-gradient(135deg, ${p.gradient})`,
+              zIndex: 1,
             }}
           >
-            {p.metrics.status}
-          </span>
+            <div 
+              style={{
+                position: 'absolute',
+                inset: 0,
+                background: `radial-gradient(at 30% 40%, ${p.color}25 0px, transparent 50%)`,
+                opacity: 0.6,
+                pointerEvents: 'none',
+              }}
+            />
 
-          {/* Icon */}
-          <div className="absolute top-5 right-5 p-3 rounded-xl backdrop-blur-md bg-white/10">
-            <p.icon className="w-6 h-6 text-white" />
-          </div>
+            <div 
+              style={{
+                position: 'absolute',
+                inset: 0,
+                background: 'linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.75) 100%)',
+                pointerEvents: 'none',
+              }}
+            />
 
-          {/* Title section */}
-          <div className="absolute bottom-5 left-5 right-5">
-            <div className="mb-2">
-              <span className="text-orange-300 text-sm font-semibold">{p.company}</span>
-            </div>
-            <h3 className="text-white text-2xl font-bold mb-2">{p.title}</h3>
-            <div className="flex items-center gap-2 text-sm text-slate-200">
-              <span>📅 {p.period}</span>
-            </div>
-          </div>
-
-          {/* Animated shine effect */}
-          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent transform -skew-x-12 animate-shine" />
-          </div>
-        </div>
-
-        {/* Body */}
-        <div className="p-8">
-          <p className="leading-relaxed mb-6 text-base" style={{ color: TEXT_GRAY }}>
-            {p.description}
-          </p>
-
-          {/* Metrics */}
-          <div className="grid grid-cols-2 gap-3 mb-6 p-4 rounded-xl" style={{ background: BG_BLACK }}>
-            {Object.entries(p.metrics).filter(([key]) => key !== 'status').map(([key, value]) => (
-              <div key={key} className="text-center">
-                <div className="text-lg font-bold mb-1" style={{ color: ACCENT_LIGHT }}>
-                  {value}
-                </div>
-                <div className="text-xs uppercase tracking-wide" style={{ color: TEXT_GRAY }}>
-                  {key}
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Features */}
-          <h4 className="font-semibold mb-3 flex items-center gap-2" style={{ color: TEXT_WHITE }}>
-            <Zap className="w-4 h-4" style={{ color: ACCENT_ORANGE }} />
-            Key Features
-          </h4>
-          <div className="grid grid-cols-2 gap-2 mb-6">
-            {p.features.map((f) => (
-              <div key={f} className="flex items-center gap-2">
-                <div 
-                  className="w-1.5 h-1.5 rounded-full relative" 
-                  style={{ background: ACCENT_ORANGE }}
-                >
-                  <div 
-                    className="absolute inset-0 w-1.5 h-1.5 rounded-full blur-sm opacity-60"
-                    style={{ background: ACCENT_ORANGE }}
-                  />
-                </div>
-                <span className="text-sm" style={{ color: TEXT_GRAY }}>
-                  {f}
-                </span>
-              </div>
-            ))}
-          </div>
-
-          {/* Tech */}
-          <h4 className="font-semibold mb-3" style={{ color: TEXT_WHITE }}>
-            Technologies
-          </h4>
-          <div className="flex flex-wrap gap-2 mb-8">
-            {p.tech.map((t) => (
-              <span
-                key={t}
-                className="px-3 py-1 text-xs font-medium rounded-lg transition-all hover:scale-105"
+            <div className="absolute top-4 right-4" style={{ zIndex: 10 }}>
+              <div 
+                className="p-3 rounded-lg"
                 style={{
-                  background: BG_BLACK,
-                  border: `1px solid ${BORDER}`,
-                  color: TEXT_WHITE,
+                  background: 'rgba(255, 255, 255, 0.1)',
+                  border: '1px solid rgba(255, 255, 255, 0.15)',
                 }}
               >
-                {t}
-              </span>
-            ))}
+                <p.icon className="w-5 h-5 text-white" strokeWidth={1.5} />
+              </div>
+            </div>
+
+            <div className="absolute top-4 left-4" style={{ zIndex: 10 }}>
+              <div 
+                className="px-3 py-1 rounded-full flex items-center gap-1.5"
+                style={{
+                  background: 'rgba(255,255,255,0.1)',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                }}
+              >
+                <Star className="w-2.5 h-2.5 text-emerald-400 fill-emerald-400" />
+                <span className="text-xs font-bold text-white">Live</span>
+              </div>
+            </div>
+
+            <div className="absolute bottom-4 left-4 right-4" style={{ zIndex: 10 }}>
+              <div 
+                className="inline-flex items-center gap-1.5 mb-2 px-3 py-1 rounded-full"
+                style={{
+                  background: 'rgba(255, 255, 255, 0.1)',
+                  border: '1px solid rgba(255, 255, 255, 0.12)',
+                }}
+              >
+                <Sparkles className="w-3 h-3 text-amber-300" />
+                <span className="text-xs font-bold text-amber-100">{p.company}</span>
+              </div>
+              
+              <h3 
+                className="text-2xl font-black mb-1 leading-tight text-white"
+                style={{
+                  textShadow: '0 3px 12px rgba(0,0,0,0.5)',
+                  letterSpacing: '-0.015em',
+                }}
+              >
+                {p.title}
+              </h3>
+              
+              <div className="text-xs text-white/60 font-medium">{p.period}</div>
+            </div>
           </div>
 
-          {/* Buttons */}
-          <div className="flex gap-4">
-            <button
-              className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-medium transition-all hover:scale-105 hover:-translate-y-0.5"
-              style={{
-                background: `linear-gradient(90deg, ${ACCENT_ORANGE}, ${ACCENT_LIGHT})`,
-                color: '#fff',
-                boxShadow: `0 4px 12px ${ACCENT_ORANGE}40`,
-              }}
+          {/* FIXED: Body with proper z-index */}
+          <div className="p-6" style={{ position: 'relative', zIndex: 10 }}>
+            <p 
+              className="text-xs leading-relaxed mb-6"
+              style={{ color: TEXT_GRAY, lineHeight: '1.7' }}
             >
-              <ExternalLink className="w-4 h-4" /> View Project
-            </button>
-            <button
-              className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-medium transition-all hover:scale-105 hover:-translate-y-0.5"
+              {p.description}
+            </p>
+
+            <div 
+              className="flex gap-3 mb-6 p-4 rounded-lg"
               style={{
-                background: BG_BLACK,
+                background: `linear-gradient(135deg, ${BG_BLACK}85, ${BG_CARD}65)`,
                 border: `1px solid ${BORDER}`,
-                color: TEXT_WHITE,
               }}
             >
-              <Github className="w-4 h-4" /> Source
-            </button>
+              {Object.entries(p.metrics).map(([key, value]) => (
+                <div key={key} className="flex-1 text-center">
+                  <div 
+                    className="text-xl font-black mb-0.5"
+                    style={{
+                      background: `linear-gradient(135deg, ${TEXT_WHITE}, ${p.color})`,
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                    }}
+                  >
+                    {value}
+                  </div>
+                  <div 
+                    className="text-[10px] uppercase tracking-wider font-bold"
+                    style={{ color: TEXT_GRAY }}
+                  >
+                    {key}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="mb-6">
+              <div className="flex items-center gap-2 mb-3">
+                <Zap className="w-3.5 h-3.5" style={{ color: p.color }} />
+                <h4 
+                  className="text-xs font-black tracking-wide uppercase"
+                  style={{ color: TEXT_WHITE }}
+                >
+                  Features
+                </h4>
+              </div>
+              
+              <div className="flex flex-wrap gap-2">
+                {p.features.map((f) => (
+                  <div 
+                    key={f}
+                    className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg"
+                    style={{
+                      background: `${BG_BLACK}40`,
+                      border: `1px solid ${BORDER}`,
+                    }}
+                  >
+                    <div 
+                      className="w-1 h-1 rounded-full"
+                      style={{ background: p.color, boxShadow: `0 0 4px ${p.color}` }}
+                    />
+                    <span className="text-xs font-medium" style={{ color: TEXT_GRAY }}>
+                      {f}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="mb-6">
+              <div className="flex items-center gap-2 mb-3">
+                <Code2 className="w-3.5 h-3.5" style={{ color: p.color }} />
+                <h4 
+                  className="text-xs font-black tracking-wide uppercase"
+                  style={{ color: TEXT_WHITE }}
+                >
+                  Tech Stack
+                </h4>
+              </div>
+              
+              <div className="flex flex-wrap gap-1.5">
+                {p.tech.map((t) => (
+                  <span
+                    key={t}
+                    className="px-3 py-1.5 text-xs font-bold rounded-lg"
+                    style={{
+                      background: `${BG_BLACK}`,
+                      border: `1px solid ${BORDER}`,
+                      color: TEXT_WHITE,
+                    }}
+                  >
+                    {t}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* FIXED: Buttons with proper cursor and z-index */}
+            <div className="flex gap-3" style={{ position: 'relative', zIndex: 20 }}>
+              <a
+                href={p.projectUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 flex items-center justify-center gap-1.5 px-4 py-3 rounded-lg font-bold text-sm"
+                style={{
+                  background: `linear-gradient(135deg, ${p.color}, ${ACCENT_LIGHT})`,
+                  color: '#fff',
+                  boxShadow: `0 8px 20px ${p.color}35`,
+                  textDecoration: 'none',
+                  cursor: 'pointer',
+                  position: 'relative',
+                  zIndex: 30,
+                }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  console.log('Clicked:', p.projectUrl);
+                }}
+              >
+                <ExternalLink className="w-3.5 h-3.5" />
+                View Live
+              </a>
+              
+              {p.githubUrl ? (
+                <a
+                  href={p.githubUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 flex items-center justify-center gap-1.5 px-4 py-3 rounded-lg font-bold text-sm"
+                  style={{
+                    background: `${BG_BLACK}`,
+                    border: `1px solid ${BORDER}`,
+                    color: TEXT_WHITE,
+                    textDecoration: 'none',
+                    cursor: 'pointer',
+                    position: 'relative',
+                    zIndex: 30,
+                  }}
+                >
+                  <Github className="w-3.5 h-3.5" />
+                  Code
+                </a>
+              ) : (
+                <div
+                  className="flex-1 flex items-center justify-center gap-1.5 px-4 py-3 rounded-lg font-bold text-sm"
+                  style={{
+                    background: `${BG_BLACK}80`,
+                    border: `1px solid ${BORDER}`,
+                    color: TEXT_GRAY,
+                    opacity: 0.5,
+                    cursor: 'not-allowed',
+                  }}
+                  title="Private Repository"
+                >
+                  <Github className="w-3.5 h-3.5" />
+                  Private
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  };
 
-  /* ─── Section Layout ───────────────────────────────── */
   return (
-    <section id="projects" className="py-32 px-6" style={{ background: BG_BLACK }}>
-      <div className="mx-auto max-w-7xl">
-        {/* Heading */}
-        <div className="text-center mb-20">
-          <h2
-            className="text-5xl md:text-6xl font-bold mb-6"
+    <section id="projects" className="relative py-20 px-6 overflow-hidden" style={{ background: BG_BLACK }}>
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div 
+          className="absolute inset-0 opacity-3"
+          style={{
+            backgroundImage: `radial-gradient(circle at 2px 2px, ${BORDER} 1px, transparent 0)`,
+            backgroundSize: '40px 40px',
+          }}
+        />
+      </div>
+
+      <div className="mx-auto max-w-7xl relative z-10">
+        <div 
+          className={`text-center mb-16 transition-all duration-1000 ease-out ${
+            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'
+          }`}
+        >
+          <div 
+            className="inline-flex items-center gap-2 px-5 py-2 rounded-full mb-6"
             style={{
-              background: `linear-gradient(90deg, ${ACCENT_ORANGE} 0%, ${ACCENT_LIGHT} 100%)`,
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
+              background: `${ACCENT_ORANGE}12`,
+              border: `1px solid ${ACCENT_ORANGE}30`,
+              boxShadow: `0 6px 20px ${ACCENT_ORANGE}20`,
             }}
           >
-            Featured Projects
+            <Sparkles className="w-4 h-4" style={{ color: ACCENT_ORANGE }} />
+            <span 
+              className="text-xs font-black tracking-widest uppercase"
+              style={{ color: ACCENT_LIGHT }}
+            >
+              Featured Work
+            </span>
+          </div>
+
+          <h2
+            className="text-5xl md:text-6xl font-black mb-4 leading-tight"
+            style={{
+              background: `linear-gradient(135deg, ${TEXT_WHITE} 0%, ${ACCENT_LIGHT} 50%, ${ACCENT_ORANGE} 100%)`,
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              letterSpacing: '-0.03em',
+            }}
+          >
+            Signature Projects
           </h2>
-          <p className="text-xl max-w-3xl mx-auto" style={{ color: TEXT_GRAY }}>
-            Real-world solutions delivering measurable impact across e-commerce, enterprise systems, and real-time platforms
+
+          <p 
+            className="text-base max-w-2xl mx-auto"
+            style={{ color: TEXT_GRAY }}
+          >
+            Real-world solutions delivering measurable impact
           </p>
         </div>
 
-        {/* Grid */}
         <div className="grid lg:grid-cols-2 gap-8 mb-16">
           {projects.map((p, i) => (
-            <Card key={p.title} p={p} delay={i * 200} />
+            <Card key={p.title} p={p} index={i} />
           ))}
         </div>
 
-        {/* Summary stats */}
-        <div className="mt-20 text-center">
+        <div 
+          className={`text-center transition-all duration-1000 ease-out ${
+            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'
+          }`}
+          style={{ transitionDelay: '600ms' }}
+        >
           <div 
-            className="inline-block p-8 rounded-2xl backdrop-blur-sm"
+            className="inline-flex items-center gap-8 p-6 rounded-xl"
             style={{
-              background: `linear-gradient(135deg, ${BG_CARD} 0%, ${BG_BLACK} 100%)`,
+              background: `linear-gradient(135deg, ${BG_CARD}96 0%, ${BG_BLACK}98 100%)`,
               border: `1px solid ${BORDER}`,
+              boxShadow: '0 16px 48px rgba(0, 0, 0, 0.5)',
             }}
           >
-            <p className="text-lg mb-2" style={{ color: TEXT_GRAY }}>
-              Trusted by leading organizations
-            </p>
-            <div className="flex items-center gap-6 justify-center">
-              <div className="text-center">
-                <div 
-                  className="text-3xl font-bold"
-                  style={{
-                    background: `linear-gradient(90deg, ${ACCENT_ORANGE}, ${ACCENT_LIGHT})`,
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                  }}
-                >
-                  15+
+            {[
+              { value: '15+', label: 'Projects', icon: '🚀' },
+              { value: '2+', label: 'Years', icon: '⚡' },
+              { value: '1000+', label: 'Users', icon: '👥' },
+            ].map((stat, idx) => (
+              <React.Fragment key={stat.label}>
+                {idx > 0 && (
+                  <div 
+                    className="w-px h-12"
+                    style={{
+                      background: `linear-gradient(to bottom, transparent, ${BORDER}, transparent)`,
+                    }}
+                  />
+                )}
+                <div className="text-center">
+                  <div className="text-2xl mb-1">{stat.icon}</div>
+                  <div 
+                    className="text-3xl font-black mb-0.5"
+                    style={{
+                      background: `linear-gradient(135deg, ${TEXT_WHITE}, ${ACCENT_LIGHT})`,
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                    }}
+                  >
+                    {stat.value}
+                  </div>
+                  <div 
+                    className="text-xs font-bold"
+                    style={{ color: TEXT_GRAY }}
+                  >
+                    {stat.label}
+                  </div>
                 </div>
-                <div className="text-sm" style={{ color: TEXT_GRAY }}>Projects</div>
-              </div>
-              <div className="w-px h-12" style={{ background: BORDER }} />
-              <div className="text-center">
-                <div 
-                  className="text-3xl font-bold"
-                  style={{
-                    background: `linear-gradient(90deg, ${ACCENT_ORANGE}, ${ACCENT_LIGHT})`,
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                  }}
-                >
-                  2+
-                </div>
-                <div className="text-sm" style={{ color: TEXT_GRAY }}>Years</div>
-              </div>
-              <div className="w-px h-12" style={{ background: BORDER }} />
-              <div className="text-center">
-                <div 
-                  className="text-3xl font-bold"
-                  style={{
-                    background: `linear-gradient(90deg, ${ACCENT_ORANGE}, ${ACCENT_LIGHT})`,
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                  }}
-                >
-                  1000+
-                </div>
-                <div className="text-sm" style={{ color: TEXT_GRAY }}>Daily Users</div>
-              </div>
-            </div>
+              </React.Fragment>
+            ))}
           </div>
         </div>
       </div>
 
-      {/* Motion keyframes */}
-      <style>{`
-        @keyframes fade-in-up {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
+      <style jsx global>{`
+        html {
+          scroll-behavior: smooth;
         }
-        .animate-fade-in-up {
-          animation: fade-in-up 0.6s ease-out forwards;
+        
+        * {
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
         }
 
-        @keyframes shine {
-          from {
-            transform: translateX(-100%) skewX(-12deg);
-          }
-          to {
-            transform: translateX(200%) skewX(-12deg);
-          }
-        }
-        .animate-shine {
-          animation: shine 3s ease-in-out infinite;
+        a {
+          cursor: pointer !important;
         }
       `}</style>
     </section>

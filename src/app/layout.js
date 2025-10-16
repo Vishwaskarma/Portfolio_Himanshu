@@ -14,8 +14,9 @@ const poppins = Poppins({
 // Fixed: Separate metadata and viewport exports
 export const metadata = {
   title: 'Your Portfolio',
-  description: 'Full-stack Developer Portfolio',
+
   // Removed themeColor and viewport from here
+  description: 'Full-stack Developer Portfolio'
 };
 
 // NEW: Separate viewport export (Required for Next.js 14+)
