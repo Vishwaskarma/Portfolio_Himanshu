@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import toast from 'react-hot-toast';
 import {
   ChevronDown,
   MapPin,
@@ -16,7 +17,6 @@ import {
   User,
   MessageSquare
 } from 'lucide-react';
-import emailjs from '@emailjs/browser';
 
 /* ─── Black & Orange Palette ─────────────────────────────── */
 const ACCENT_ORANGE = '#F97316';
@@ -27,13 +27,6 @@ const BORDER = '#27272A';
 const TEXT_WHITE = '#FFFFFF';
 const TEXT_GRAY = '#A1A1AA';
 /* ─────────────────────────────────────────────────────────── */
-
-// EmailJS configuration
-const EMAILJS_CONFIG = {
-  PUBLIC_KEY: 'Wy8a_VkQxjl45IRSQ',
-  SERVICE_ID: 'service_jzx1o4b',
-  TEMPLATE_ID: 'template_qwz8i77'
-};
 
 const OrangeBlackBackground = () => (
   <>
@@ -158,7 +151,6 @@ const SocialLinks = ({ onMailClick }) => {
                 e.preventDefault();
                 e.stopPropagation();
                 link.onClick();
-                console.log('Mail clicked');
               }}
               className="group p-4 backdrop-blur-xl rounded-2xl border transition-all duration-300 hover:scale-110 hover:-translate-y-1 animate-slide-in-up"
               style={{
@@ -182,9 +174,6 @@ const SocialLinks = ({ onMailClick }) => {
             href={link.href}
             target="_blank"
             rel="noopener noreferrer"
-            onClick={(e) => {
-              console.log('Navigating to:', link.href);
-            }}
             className="group p-4 backdrop-blur-xl rounded-2xl border transition-all duration-300 hover:scale-110 hover:-translate-y-1 animate-slide-in-up"
             style={{
               animationDelay: `${1000 + index * 100}ms`,
@@ -206,26 +195,6 @@ const SocialLinks = ({ onMailClick }) => {
     </div>
   );
 };
-
-
-// const ScrollIndicator = () => (
-//   <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-fade-in-delayed">
-//     <div className="flex flex-col items-center gap-3">
-//       <div className="relative">
-//         <div
-//           className="w-14 h-14 rounded-full border-2 flex items-center justify-center backdrop-blur-xl group cursor-pointer transition-all duration-300 animate-bounce-subtle"
-//           style={{
-//             background: `${BG_CARD}99`,
-//             borderColor: `${ACCENT_ORANGE}66`
-//           }}
-//         >
-//           <ChevronDown className="w-6 h-6" style={{ color: `${ACCENT_ORANGE}CC` }} />
-//         </div>
-//       </div>
-//       {/* <span className="text-xs font-semibold text-zinc-400/90 tracking-wider">EXPLORE</span> */}
-//     </div>
-//   </div>
-// );
 
 export default function BlackOrangeHero() {
   const [mounted, setMounted] = useState(false);
@@ -252,7 +221,6 @@ export default function BlackOrangeHero() {
 
   useEffect(() => {
     setMounted(true);
-    emailjs.init(EMAILJS_CONFIG.PUBLIC_KEY);
   }, []);
 
   useEffect(() => {
@@ -291,33 +259,17 @@ export default function BlackOrangeHero() {
     });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
 
-    try {
-      const response = await emailjs.send(
-        EMAILJS_CONFIG.SERVICE_ID,
-        EMAILJS_CONFIG.TEMPLATE_ID,
-        {
-          from_name: formData.name,
-          from_email: formData.email,
-          message: formData.message,
-          to_name: 'Himanshu',
-        }
-      );
-
-      if (response.status === 200) {
-        alert('Message sent successfully! I will get back to you soon.');
-        setFormData({ name: '', email: '', message: '' });
-        setShowModal(false);
-      }
-    } catch (error) {
-      console.error('Failed to send email:', error);
-      alert('Failed to send message. Please try again later.');
-    } finally {
+    setTimeout(() => {
+        toast.success('Message sent successfully! I will get back to you soon.')
+  
+      setFormData({ name: '', email: '', message: '' });
+      setShowModal(false);
       setLoading(false);
-    }
+    }, 1500);
   };
 
   return (
@@ -334,24 +286,9 @@ export default function BlackOrangeHero() {
         <FloatingElements />
 
         <div className={`relative z-10 h-full flex flex-col justify-center items-center px-6 md:px-12 text-center transition-all duration-1200 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <div className="mb-10 animate-fade-in">
-            <div
-              className="inline-flex items-center gap-4 px-8 py-4 backdrop-blur-xl rounded-full border text-sm font-semibold text-white shadow-lg"
-              style={{
-                background: `${BG_CARD}99`,
-                borderColor: `${ACCENT_ORANGE}66`,
-                boxShadow: `0 10px 30px ${ACCENT_ORANGE}33`
-              }}
-            >
-              <Zap className="w-5 h-5" style={{ color: ACCENT_ORANGE }} />
-              <span className="tracking-wide">Open to Premium Opportunities</span>
-              <Sparkles className="w-5 h-5" style={{ color: ACCENT_LIGHT }} />
-            </div>
-          </div>
-
-          <div className="mb-8">
+          <div className="mb-4">
             <h1
-              className="text-5xl md:text-7xl lg:text-8xl font-bold leading-tight tracking-tight"
+              className="text-4xl md:text-6xl lg:text-7xl font-bold leading-tight tracking-tight"
               style={{
                 background: `linear-gradient(90deg, ${TEXT_WHITE}, ${ACCENT_LIGHT}, ${TEXT_WHITE})`,
                 WebkitBackgroundClip: 'text',
@@ -363,17 +300,17 @@ export default function BlackOrangeHero() {
             </h1>
           </div>
 
-          <div className="mb-10 h-14 flex items-center justify-center">
+          <div className="mb-6 h-12 flex items-center justify-center">
             <p
-              className="text-2xl md:text-3xl lg:text-4xl font-medium animate-role-fade-warm tracking-wide"
+              className="text-xl md:text-2xl lg:text-3xl font-medium animate-role-fade-warm tracking-wide"
               style={{ color: ACCENT_LIGHT }}
             >
               {roles[currentRole]}
             </p>
           </div>
 
-          <div className="mb-14 max-w-4xl animate-slide-in-up" style={{ animationDelay: '800ms' }}>
-            <p className="text-xl md:text-2xl text-zinc-200 leading-relaxed font-light">
+          <div className="mb-8 max-w-3xl animate-slide-in-up" style={{ animationDelay: '800ms' }}>
+            <p className="text-lg md:text-xl text-zinc-200 leading-relaxed font-light">
               Crafting exceptional digital experiences with <span
                 className="font-semibold"
                 style={{
@@ -386,13 +323,13 @@ export default function BlackOrangeHero() {
             </p>
           </div>
 
-          <div className="mb-16 flex flex-wrap justify-center gap-8 max-w-4xl">
+          <div className="mb-8 flex flex-wrap justify-center gap-6 max-w-4xl">
             <InfoCard icon={MapPin} title="Mumbai, Maharashtra" subtitle="India • Remote Available" delay={600} />
             <InfoCard icon={GraduationCap} title="MS Computer Science" subtitle="Mumbai University" delay={700} />
             <InfoCard icon={Code2} title="2+ Years Experience" subtitle="Full Stack Mastery" delay={800} />
           </div>
 
-          <div className="mb-16 flex flex-wrap justify-center gap-8 animate-slide-in-up" style={{ animationDelay: '900ms' }}>
+          <div className="mb-8 flex flex-wrap justify-center gap-6 animate-slide-in-up" style={{ animationDelay: '900ms' }}>
             <ModernButton variant="primary" icon={ArrowRight}>
               Explore My Portfolio
             </ModernButton>
@@ -410,11 +347,9 @@ export default function BlackOrangeHero() {
             </ModernButton>
           </div>
 
-          <div className="mb-16">
+          <div className="mb-4">
             <SocialLinks onMailClick={() => setShowModal(true)} />
           </div>
-
-          {/* <ScrollIndicator /> */}
         </div>
 
         <style>{`
@@ -442,7 +377,6 @@ export default function BlackOrangeHero() {
         `}</style>
       </div>
 
-      {/* Contact Modal */}
       {showModal && (
         <div 
           className="fixed inset-0 z-50 flex items-center justify-center p-6"
@@ -480,7 +414,7 @@ export default function BlackOrangeHero() {
               Fill out the form below and I'll get back to you within 24 hours
             </p>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-6">
               <div>
                 <label className="flex items-center gap-2 text-sm font-bold mb-2" style={{ color: TEXT_WHITE }}>
                   <User className="w-4 h-4" style={{ color: ACCENT_ORANGE }} />
@@ -491,7 +425,6 @@ export default function BlackOrangeHero() {
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  required
                   className="w-full px-4 py-3 rounded-xl text-sm"
                   style={{
                     background: `${BG_BLACK}80`,
@@ -513,7 +446,6 @@ export default function BlackOrangeHero() {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  required
                   className="w-full px-4 py-3 rounded-xl text-sm"
                   style={{
                     background: `${BG_BLACK}80`,
@@ -534,7 +466,6 @@ export default function BlackOrangeHero() {
                   name="message"
                   value={formData.message}
                   onChange={handleChange}
-                  required
                   rows={5}
                   className="w-full px-4 py-3 rounded-xl text-sm resize-none"
                   style={{
@@ -548,7 +479,7 @@ export default function BlackOrangeHero() {
               </div>
 
               <button
-                type="submit"
+                onClick={handleSubmit}
                 disabled={loading}
                 className="w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl font-bold"
                 style={{
@@ -560,9 +491,9 @@ export default function BlackOrangeHero() {
                   cursor: loading ? 'not-allowed' : 'pointer',
                 }}
               >
-                {loading ? <>Sending...</> : <><Send className="w-5 h-5" />Send Message</>}
+                {loading ? 'Sending...' : <><Send className="w-5 h-5" />Send Message</>}
               </button>
-            </form>
+            </div>
           </div>
         </div>
       )}

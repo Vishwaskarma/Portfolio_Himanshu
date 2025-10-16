@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Globe, Cloud, Database, Server, Sparkles, ArrowRight, X, Send, Mail, User, MessageSquare } from 'lucide-react';
 import emailjs from '@emailjs/browser';
+import toast from 'react-hot-toast';
 
 /* ─── Black & Orange Palette ─────────────────────────────── */
 const ACCENT_ORANGE = '#F97316';
@@ -95,7 +96,7 @@ export default function ServicesSection() {
       );
 
       if (response.status === 200) {
-        alert('Message sent successfully! I will get back to you soon.');
+        toast.success('Message sent successfully! I will get back to you soon.')
         setFormData({ name: '', email: '', message: '' });
         setShowModal(false);
       }

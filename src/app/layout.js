@@ -1,4 +1,5 @@
 import { Poppins } from 'next/font/google';
+import { Toaster } from 'react-hot-toast';
 import './globals.css';
 
 const poppins = Poppins({
@@ -49,6 +50,7 @@ export default function RootLayout({ children }) {
       </head>
       <body className={`antialiased ${poppins.className}`} suppressHydrationWarning>
         {children}
+         <Toaster position="bottom-center" reverseOrder={false} />
       </body>
     </html>
   );

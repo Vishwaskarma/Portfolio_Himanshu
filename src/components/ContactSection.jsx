@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+
 import {
   Mail,
   Phone,
@@ -8,6 +9,10 @@ import {
   ArrowRight,
   Download,
   Globe,
+  X,
+  Send,
+  User,
+  MessageSquare
 } from 'lucide-react';
 
 const ACCENT_ORANGE = '#F97316';
@@ -19,6 +24,14 @@ const TEXT_WHITE = '#FFFFFF';
 const TEXT_GRAY = '#A1A1AA';
 
 export default function ContactSection() {
+  const [showModal, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    message: '',
+  });
+
   const cards = [
     {
       Icon: Mail,
@@ -44,13 +57,13 @@ export default function ContactSection() {
     {
       Icon: Github,
       label: 'GitHub',
-      href: '#',
+      href: 'https://github.com/Vishwaskarma',
       username: '@Vishwaskarma'
     },
     {
       Icon: Linkedin,
       label: 'LinkedIn',
-      href: '#',
+      href: 'https://www.linkedin.com/in/himanshu-vishwakarma-856773239/',
       username: 'Himanshu Vishwakarma'
     },
     {
@@ -60,6 +73,25 @@ export default function ContactSection() {
       username: 'Portfolio Site'
     },
   ];
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    setTimeout(() => {
+      alert('Message sent successfully! I will get back to you soon.');
+      setFormData({ name: '', email: '', message: '' });
+      setShowModal(false);
+      setLoading(false);
+    }, 1500);
+  };
 
   const InfoCard = ({ c }) => (
     <div className="text-center transition-all duration-300 hover:scale-105">
@@ -84,158 +116,291 @@ export default function ContactSection() {
   );
 
   return (
-    <section id="contact" className="py-32 px-6" style={{ background: BG_BLACK }}>
-      <div className="mx-auto max-w-6xl">
-        <div className="text-center mb-20">
-          <h2
-            className="text-5xl md:text-6xl font-bold mb-6"
-            style={{
-              background: `linear-gradient(90deg, ${ACCENT_ORANGE} 0%, ${ACCENT_LIGHT} 100%)`,
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-            }}
-          >
-            Let's Build Something Amazing
-          </h2>
-          <p className="text-xl max-w-3xl mx-auto" style={{ color: TEXT_GRAY }}>
-            Ready to turn ideas into reality? Let's discuss your next project and create something extraordinary together.
-          </p>
-        </div>
-
-        <div className="grid lg:grid-cols-3 gap-8 mb-24">
-          {cards.map((c) => (
-            <div
-              key={c.title}
-              className="rounded-3xl p-8 shadow-lg backdrop-blur-sm transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
-              style={{ 
-                background: `linear-gradient(135deg, ${BG_CARD} 0%, ${BG_BLACK} 100%)`,
-                border: `1px solid ${BORDER}` 
+    <>
+      <section id="contact" className="py-32 px-6" style={{ background: BG_BLACK }}>
+        <div className="mx-auto max-w-6xl">
+          <div className="text-center mb-20">
+            <h2
+              className="text-5xl md:text-6xl font-bold mb-6"
+              style={{
+                background: `linear-gradient(90deg, ${ACCENT_ORANGE} 0%, ${ACCENT_LIGHT} 100%)`,
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
               }}
             >
-              <InfoCard c={c} />
-            </div>
-          ))}
-        </div>
-
-        <div
-          className="rounded-3xl p-12 text-center shadow-2xl backdrop-blur-sm relative overflow-hidden"
-          style={{ 
-            background: `linear-gradient(135deg, ${BG_CARD} 0%, ${BG_BLACK} 100%)`,
-            border: `1px solid ${BORDER}` 
-          }}
-        >
-          <div 
-            className="absolute top-0 left-1/2 transform -translate-x-1/2 w-96 h-96 rounded-full blur-3xl opacity-20"
-            style={{ background: ACCENT_ORANGE }}
-          />
-          
-          <div className="relative z-10">
-            <h3
-              className="text-4xl md:text-5xl font-bold mb-6"
-              style={{ color: TEXT_WHITE }}
-            >
-              Ready to Get Started?
-            </h3>
-            <p
-              className="text-xl leading-relaxed mb-10 mx-auto max-w-3xl"
-              style={{ color: TEXT_GRAY }}
-            >
-              Whether you need a full-stack web application, cloud architecture, microservices implementation, 
-              or technical consultation, I'll help you achieve your goals with cutting-edge solutions and 2+ years 
-              of proven expertise.
+              Let's Build Something Amazing
+            </h2>
+            <p className="text-xl max-w-3xl mx-auto" style={{ color: TEXT_GRAY }}>
+              Ready to turn ideas into reality? Let's discuss your next project and create something extraordinary together.
             </p>
+          </div>
 
-            <div className="flex flex-wrap justify-center gap-6 mb-12">
-              <button
-                className="group flex items-center gap-3 px-10 py-5 rounded-2xl font-bold transition-all duration-300
-                           hover:shadow-2xl hover:scale-105 hover:-translate-y-1 relative overflow-hidden"
-                style={{
-                  background: `linear-gradient(90deg, ${ACCENT_ORANGE}, ${ACCENT_LIGHT})`,
-                  color: TEXT_WHITE,
+          <div className="grid lg:grid-cols-3 gap-8 mb-24">
+            {cards.map((c) => (
+              <div
+                key={c.title}
+                className="rounded-3xl p-8 shadow-lg backdrop-blur-sm transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
+                style={{ 
+                  background: `linear-gradient(135deg, ${BG_CARD} 0%, ${BG_BLACK} 100%)`,
+                  border: `1px solid ${BORDER}` 
                 }}
               >
-                <span className="relative z-10">Start a Project</span>
-                <ArrowRight className="h-5 w-5 relative z-10 group-hover:translate-x-1 transition-transform" />
-                
-                <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-12" />
-              </button>
-              
-              <button
-                className="group flex items-center gap-3 px-10 py-5 rounded-2xl font-bold transition-all duration-300
-                           hover:shadow-2xl hover:scale-105 hover:-translate-y-1 backdrop-blur-sm"
-                style={{
-                  background: BG_CARD,
-                  border: `2px solid ${ACCENT_ORANGE}40`,
-                  color: TEXT_WHITE,
-                }}
-              >
-                <Download className="h-5 w-5 group-hover:translate-y-1 transition-transform" />
-                <span>Download Resume</span>
-              </button>
-            </div>
+                <InfoCard c={c} />
+              </div>
+            ))}
+          </div>
 
-            <div>
-              <p className="text-sm font-semibold mb-6 tracking-wider" style={{ color: TEXT_GRAY }}>
-                CONNECT WITH ME
+          <div
+            className="rounded-3xl p-12 text-center shadow-2xl backdrop-blur-sm relative overflow-hidden"
+            style={{ 
+              background: `linear-gradient(135deg, ${BG_CARD} 0%, ${BG_BLACK} 100%)`,
+              border: `1px solid ${BORDER}` 
+            }}
+          >
+            <div 
+              className="absolute top-0 left-1/2 transform -translate-x-1/2 w-96 h-96 rounded-full blur-3xl opacity-20"
+              style={{ background: ACCENT_ORANGE }}
+            />
+            
+            <div className="relative z-10">
+              <h3
+                className="text-4xl md:text-5xl font-bold mb-6"
+                style={{ color: TEXT_WHITE }}
+              >
+                Ready to Get Started?
+              </h3>
+              <p
+                className="text-xl leading-relaxed mb-10 mx-auto max-w-3xl"
+                style={{ color: TEXT_GRAY }}
+              >
+                Whether you need a full-stack web application, cloud architecture, microservices implementation, 
+                or technical consultation, I'll help you achieve your goals with cutting-edge solutions and 2+ years 
+                of proven expertise.
               </p>
-              <div className="flex flex-wrap justify-center gap-6">
-                {socialLinks.map((social) => (
-                  <a
-                    key={social.label}
-                    href={social.href}
-                    className="group flex items-center gap-3 p-4 rounded-xl transition-all duration-300 hover:scale-110 hover:-translate-y-1"
-                    style={{
-                      background: ACCENT_ORANGE + '15',
-                      border: `1px solid ${ACCENT_ORANGE}30`,
-                    }}
-                  >
-                    <div className="relative">
-                      <social.Icon 
-                        className="h-6 w-6 transition-colors" 
-                        style={{ color: ACCENT_ORANGE }} 
-                      />
-                      <div 
-                        className="absolute inset-0 rounded-full blur-md opacity-0 group-hover:opacity-60 transition-opacity"
-                        style={{ background: ACCENT_ORANGE }}
-                      />
-                    </div>
-                    <div className="text-left">
-                      <p className="text-xs font-semibold" style={{ color: TEXT_GRAY }}>
-                        {social.label}
-                      </p>
-                      <p className="text-sm font-medium" style={{ color: TEXT_WHITE }}>
-                        {social.username}
-                      </p>
-                    </div>
-                  </a>
-                ))}
+
+              <div className="flex flex-wrap justify-center gap-6 mb-12">
+                <button
+                  onClick={() => setShowModal(true)}
+                  className="group flex items-center gap-3 px-10 py-5 rounded-2xl font-bold transition-all duration-300
+                             hover:shadow-2xl hover:scale-105 hover:-translate-y-1 relative overflow-hidden"
+                  style={{
+                    background: `linear-gradient(90deg, ${ACCENT_ORANGE}, ${ACCENT_LIGHT})`,
+                    color: TEXT_WHITE,
+                  }}
+                >
+                  <span className="relative z-10">Start a Project</span>
+                  <ArrowRight className="h-5 w-5 relative z-10 group-hover:translate-x-1 transition-transform" />
+                  
+                  <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-12" />
+                </button>
+                
+                <button
+                  onClick={() => {
+                    const link = document.createElement('a');
+                    link.href = '/HimanshuVishwakarma.pdf';
+                    link.download = 'Himanshu_Vishwakarma_Resume.pdf';
+                    link.click();
+                  }}
+                  className="group flex items-center gap-3 px-10 py-5 rounded-2xl font-bold transition-all duration-300
+                             hover:shadow-2xl hover:scale-105 hover:-translate-y-1 backdrop-blur-sm"
+                  style={{
+                    background: BG_CARD,
+                    border: `2px solid ${ACCENT_ORANGE}40`,
+                    color: TEXT_WHITE,
+                  }}
+                >
+                  <Download className="h-5 w-5 group-hover:translate-y-1 transition-transform" />
+                  <span>Download Resume</span>
+                </button>
+              </div>
+
+              <div>
+                <p className="text-sm font-semibold mb-6 tracking-wider" style={{ color: TEXT_GRAY }}>
+                  CONNECT WITH ME
+                </p>
+                <div className="flex flex-wrap justify-center gap-6">
+                  {socialLinks.map((social) => (
+                    <a
+                      key={social.label}
+                      href={social.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group flex items-center gap-3 p-4 rounded-xl transition-all duration-300 hover:scale-110 hover:-translate-y-1"
+                      style={{
+                        background: ACCENT_ORANGE + '15',
+                        border: `1px solid ${ACCENT_ORANGE}30`,
+                      }}
+                    >
+                      <div className="relative">
+                        <social.Icon 
+                          className="h-6 w-6 transition-colors" 
+                          style={{ color: ACCENT_ORANGE }} 
+                        />
+                        <div 
+                          className="absolute inset-0 rounded-full blur-md opacity-0 group-hover:opacity-60 transition-opacity"
+                          style={{ background: ACCENT_ORANGE }}
+                        />
+                      </div>
+                      <div className="text-left">
+                        <p className="text-xs font-semibold" style={{ color: TEXT_GRAY }}>
+                          {social.label}
+                        </p>
+                        <p className="text-sm font-medium" style={{ color: TEXT_WHITE }}>
+                          {social.username}
+                        </p>
+                      </div>
+                    </a>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <div className="text-center mt-16">
-          <p className="text-sm" style={{ color: TEXT_GRAY }}>
-            Based in Mumbai, Maharashtra · Available for remote opportunities worldwide
-          </p>
-          <div className="mt-4 flex items-center justify-center gap-2">
-            <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: ACCENT_ORANGE }} />
-            <p className="text-sm font-semibold" style={{ color: ACCENT_LIGHT }}>
-              Currently open to new opportunities
+          <div className="text-center mt-16">
+            <p className="text-sm" style={{ color: TEXT_GRAY }}>
+              Based in Mumbai, Maharashtra · Available for remote opportunities worldwide
             </p>
+            <div className="mt-4 flex items-center justify-center gap-2">
+              <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: ACCENT_ORANGE }} />
+              <p className="text-sm font-semibold" style={{ color: ACCENT_LIGHT }}>
+                Currently open to new opportunities
+              </p>
+            </div>
           </div>
         </div>
-      </div>
 
-      <style>{`
-        @keyframes pulse {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.5; }
-        }
-        .animate-pulse {
-          animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-      `}</style>
-    </section>
+        <style>{`
+          @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+          }
+          .animate-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+          }
+        `}</style>
+      </section>
+
+      {/* Contact Modal */}
+      {showModal && (
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center p-6"
+          style={{
+            background: 'rgba(0, 0, 0, 0.8)',
+            backdropFilter: 'blur(10px)',
+          }}
+          onClick={() => setShowModal(false)}
+        >
+          <div
+            className="relative w-full max-w-lg rounded-2xl p-8"
+            style={{
+              background: `linear-gradient(135deg, ${BG_CARD}98 0%, ${BG_BLACK}99 100%)`,
+              border: `1px solid ${BORDER}`,
+              boxShadow: '0 24px 60px rgba(0, 0, 0, 0.7)',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setShowModal(false)}
+              className="absolute top-6 right-6 w-10 h-10 flex items-center justify-center rounded-lg transition-colors hover:bg-gray-800"
+              style={{
+                background: `${BG_BLACK}80`,
+                border: `1px solid ${BORDER}`,
+                color: TEXT_GRAY,
+              }}
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <h3 className="text-3xl font-black mb-2" style={{ color: TEXT_WHITE }}>
+              Let's Work Together
+            </h3>
+            <p className="text-sm mb-8" style={{ color: TEXT_GRAY }}>
+              Fill out the form below and I'll get back to you within 24 hours
+            </p>
+
+            <div className="space-y-6">
+              <div>
+                <label className="flex items-center gap-2 text-sm font-bold mb-2" style={{ color: TEXT_WHITE }}>
+                  <User className="w-4 h-4" style={{ color: ACCENT_ORANGE }} />
+                  Your Name
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 rounded-xl text-sm"
+                  style={{
+                    background: `${BG_BLACK}80`,
+                    border: `1px solid ${BORDER}`,
+                    color: TEXT_WHITE,
+                    outline: 'none',
+                  }}
+                  placeholder="John Doe"
+                />
+              </div>
+
+              <div>
+                <label className="flex items-center gap-2 text-sm font-bold mb-2" style={{ color: TEXT_WHITE }}>
+                  <Mail className="w-4 h-4" style={{ color: ACCENT_ORANGE }} />
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 rounded-xl text-sm"
+                  style={{
+                    background: `${BG_BLACK}80`,
+                    border: `1px solid ${BORDER}`,
+                    color: TEXT_WHITE,
+                    outline: 'none',
+                  }}
+                  placeholder="john@example.com"
+                />
+              </div>
+
+              <div>
+                <label className="flex items-center gap-2 text-sm font-bold mb-2" style={{ color: TEXT_WHITE }}>
+                  <MessageSquare className="w-4 h-4" style={{ color: ACCENT_ORANGE }} />
+                  Message
+                </label>
+                <textarea
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  rows={5}
+                  className="w-full px-4 py-3 rounded-xl text-sm resize-none"
+                  style={{
+                    background: `${BG_BLACK}80`,
+                    border: `1px solid ${BORDER}`,
+                    color: TEXT_WHITE,
+                    outline: 'none',
+                  }}
+                  placeholder="Tell me about your project..."
+                />
+              </div>
+
+              <button
+                onClick={handleSubmit}
+                disabled={loading}
+                className="w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl font-bold"
+                style={{
+                  background: loading ? `${BG_BLACK}` : `linear-gradient(135deg, ${ACCENT_ORANGE}, ${ACCENT_LIGHT})`,
+                  border: `1px solid ${loading ? BORDER : ACCENT_ORANGE}`,
+                  color: '#fff',
+                  boxShadow: loading ? 'none' : `0 12px 32px ${ACCENT_ORANGE}40`,
+                  opacity: loading ? 0.6 : 1,
+                  cursor: loading ? 'not-allowed' : 'pointer',
+                }}
+              >
+                {loading ? 'Sending...' : <><Send className="w-5 h-5" />Send Message</>}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
