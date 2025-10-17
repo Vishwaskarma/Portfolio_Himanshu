@@ -53,7 +53,7 @@ const achievements = [
 const experience = [
   {
     company: 'MAIDC',
-    role: 'Assistant Manager Sr Dev And Engineer',
+    role: 'Senior Dev And Engineer',
     period: 'Dec 2024 - Present',
     location: 'Goregaon East, Mumbai',
     projects: [
