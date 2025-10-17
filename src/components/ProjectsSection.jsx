@@ -289,11 +289,11 @@ export default function ProjectsSection() {
                   textDecoration: 'none',
                   cursor: 'pointer',
                   position: 'relative',
-                  zIndex: 30,
+                  // zIndex: 30,
                 }}
                 onClick={(e) => {
+                  console.log('onclick:', p.projectUrl);
                   e.stopPropagation();
-                  console.log('Clicked:', p.projectUrl);
                 }}
               >
                 <ExternalLink className="w-3.5 h-3.5" />

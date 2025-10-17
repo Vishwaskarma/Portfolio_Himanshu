@@ -22,7 +22,7 @@ export default function ExperienceSection() {
 
   const experience = [
     {
-      title: 'Assistant Manager Sr Dev And Engineer',
+      title: 'Senior Dev And Engineer',
       company: 'MAIDC',
       duration: 'Dec 2024 – Present',
       location: 'Goregaon East, Mumbai',
