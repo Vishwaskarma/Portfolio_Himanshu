@@ -24,7 +24,7 @@ const Footer = () => {
     {
       name: 'LinkedIn',
       icon: Linkedin,
-      url: 'https://linkedin.com/in/himanshu-vishwakarma',
+      url: 'https://www.linkedin.com/in/himanshu-vishwakarma-856773239/',
       username: 'Himanshu Vishwakarma'
     },
     {
