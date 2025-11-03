@@ -38,7 +38,7 @@
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
   --color-border: var(--border);
-  --font-sans: var(--font-poppins);
+  --font-sans: var(--font-worksans), var(--font-poppins);
   --radius: var(--radius);
 }
 
@@ -54,7 +54,7 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-poppins), system-ui, -apple-system, sans-serif;
+  font-family: var(--font-worksans), var(--font-poppins), system-ui, -apple-system, sans-serif;
   font-feature-settings: "rlig" 1, "calt" 1;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -77,3 +77,5 @@ html {
 html.dark {
   color-scheme: dark;
 }
+
+

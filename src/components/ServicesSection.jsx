@@ -1,5 +1,10 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
-import { Globe, Cloud, Database, Server, Sparkles, ArrowRight, X, Send, Mail, User, MessageSquare } from 'lucide-react';
+import {
+  Globe, Cloud, Database, Server, Sparkles,
+  ArrowRight, X, Send, Mail, User, MessageSquare
+} from 'lucide-react';
 import emailjs from '@emailjs/browser';
 import toast from 'react-hot-toast';
 
@@ -13,7 +18,6 @@ const TEXT_WHITE = '#FFFFFF';
 const TEXT_GRAY = '#A1A1AA';
 /* ─────────────────────────────────────────────────────────── */
 
-// EmailJS configuration - replace with your actual values
 const EMAILJS_CONFIG = {
   PUBLIC_KEY: process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || 'Wy8a_VkQxjl45IRSQ',
   SERVICE_ID: process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || 'service_jzx1o4b',
@@ -30,13 +34,9 @@ export default function ServicesSection() {
     message: '',
   });
 
-  // Initialize EmailJS
   useEffect(() => {
     const timer = setTimeout(() => setIsVisible(true), 100);
-    
-    // Initialize EmailJS with your public key
     emailjs.init(EMAILJS_CONFIG.PUBLIC_KEY);
-    
     return () => clearTimeout(timer);
   }, []);
 
@@ -72,18 +72,13 @@ export default function ServicesSection() {
   ];
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
     try {
-      // Send email using EmailJS
       const response = await emailjs.send(
         EMAILJS_CONFIG.SERVICE_ID,
         EMAILJS_CONFIG.TEMPLATE_ID,
@@ -91,18 +86,17 @@ export default function ServicesSection() {
           from_name: formData.name,
           from_email: formData.email,
           message: formData.message,
-          to_name: 'Himanshu', // Your name
+          to_name: 'Himanshu',
         }
       );
-
       if (response.status === 200) {
-        toast.success('Message sent successfully! I will get back to you soon.')
+        toast.success('Message sent successfully! I will get back to you soon.');
         setFormData({ name: '', email: '', message: '' });
         setShowModal(false);
       }
     } catch (error) {
       console.error('Failed to send email:', error);
-      alert('Failed to send message. Please try again later.');
+      toast.error('Failed to send message. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -114,11 +108,7 @@ export default function ServicesSection() {
         className={`relative transition-all duration-800 ease-out ${
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
         }`}
-        style={{ 
-          transitionDelay: `${index * 100}ms`,
-          display: 'flex',
-          flexDirection: 'column',
-        }}
+        style={{ transitionDelay: `${index * 100}ms` }}
       >
         <div
           className="relative rounded-2xl p-8 overflow-hidden flex flex-col h-full"
@@ -128,12 +118,9 @@ export default function ServicesSection() {
             boxShadow: '0 12px 32px -8px rgba(0, 0, 0, 0.6), inset 0 1px 0 0 rgba(255,255,255,0.02)',
           }}
         >
-          <div 
-            className="absolute inset-0"
-            style={{
-              opacity: 0.05,
-              background: `radial-gradient(circle at top right, ${s.color}, transparent 70%)`,
-            }}
+          <div
+            className="absolute inset-0 opacity-5"
+            style={{ background: `radial-gradient(circle at top right, ${s.color}, transparent 70%)` }}
           />
 
           <div className="relative z-10 flex flex-col flex-1">
@@ -147,31 +134,19 @@ export default function ServicesSection() {
               >
                 <s.icon className="w-7 h-7" style={{ color: s.color }} />
               </div>
-
               <div 
-                className="px-3 py-1.5 rounded-full"
-                style={{
-                  background: `${s.color}15`,
-                  border: `1px solid ${s.color}30`,
-                }}
+                className="px-3 py-1.5 rounded-full text-xs font-bold tracking-wide"
+                style={{ background: `${s.color}15`, border: `1px solid ${s.color}30`, color: s.color }}
               >
-                <span className="text-xs font-bold tracking-wide" style={{ color: s.color }}>
-                  Available
-                </span>
+                Available
               </div>
             </div>
 
-            <h3 
-              className="text-2xl font-black mb-4"
-              style={{ color: TEXT_WHITE, letterSpacing: '-0.01em' }}
-            >
+            <h3 className="text-2xl font-black mb-4" style={{ color: TEXT_WHITE, letterSpacing: '-0.01em' }}>
               {s.title}
             </h3>
 
-            <p 
-              className="leading-relaxed mb-6 text-sm flex-grow"
-              style={{ color: TEXT_GRAY, lineHeight: '1.8' }}
-            >
+            <p className="leading-relaxed mb-6 text-sm flex-grow" style={{ color: TEXT_GRAY, lineHeight: '1.8' }}>
               {s.desc}
             </p>
 
@@ -179,17 +154,11 @@ export default function ServicesSection() {
               <div className="flex items-center gap-2 mb-4">
                 <div 
                   className="w-8 h-8 rounded-lg flex items-center justify-center"
-                  style={{
-                    background: `${s.color}15`,
-                    border: `1px solid ${s.color}30`,
-                  }}
+                  style={{ background: `${s.color}15`, border: `1px solid ${s.color}30` }}
                 >
                   <Sparkles className="w-4 h-4" style={{ color: s.color }} />
                 </div>
-                <h4 
-                  className="text-xs font-black tracking-wider uppercase"
-                  style={{ color: TEXT_WHITE }}
-                >
+                <h4 className="text-xs font-black tracking-wider uppercase" style={{ color: TEXT_WHITE }}>
                   What&apos;s Included
                 </h4>
               </div>
@@ -198,23 +167,19 @@ export default function ServicesSection() {
                 {s.feats.map((f) => (
                   <div key={f} className="flex items-center gap-3">
                     <div 
-                      className="w-1.5 h-1.5 rounded-full flex-shrink-0"
-                      style={{ 
-                        background: s.color,
-                        boxShadow: `0 0 6px ${s.color}`,
-                      }}
+                      className="w-1.5 h-1.5 rounded-full"
+                      style={{ background: s.color, boxShadow: `0 0 6px ${s.color}` }}
                     />
-                    <span className="text-sm font-medium" style={{ color: TEXT_GRAY }}>
-                      {f}
-                    </span>
+                    <span className="text-sm font-medium" style={{ color: TEXT_GRAY }}>{f}</span>
                   </div>
                 ))}
               </div>
             </div>
 
+            {/* CLEAN BUTTON – NO HOVER */}
             <button
               onClick={() => setShowModal(true)}
-              className="w-full flex items-center justify-between px-6 py-4 rounded-xl font-bold mt-auto transition-transform hover:scale-105"
+              className="w-full flex items-center justify-between px-6 py-4 rounded-xl font-bold mt-auto"
               style={{
                 background: `linear-gradient(135deg, ${s.color}, ${ACCENT_LIGHT})`,
                 border: `1px solid ${s.color}`,
@@ -259,10 +224,7 @@ export default function ServicesSection() {
               }}
             >
               <Sparkles className="w-5 h-5" style={{ color: ACCENT_ORANGE }} />
-              <span 
-                className="text-sm font-black tracking-widest uppercase"
-                style={{ color: ACCENT_LIGHT }}
-              >
+              <span className="text-sm font-black tracking-widest uppercase" style={{ color: ACCENT_LIGHT }}>
                 Services & Expertise
               </span>
             </div>
@@ -279,26 +241,18 @@ export default function ServicesSection() {
               What I Do
             </h2>
 
-            <p 
-              className="text-xl max-w-3xl mx-auto leading-relaxed"
-              style={{ color: TEXT_GRAY }}
-            >
+            <p className="text-xl max-w-3xl mx-auto leading-relaxed" style={{ color: TEXT_GRAY }}>
               Comprehensive end-to-end solutions tailored to your business needs
             </p>
           </div>
 
-          <div 
-            className="grid md:grid-cols-2 gap-8"
-            style={{
-              display: 'grid',
-              gridAutoRows: '1fr',
-            }}
-          >
+          <div className="grid md:grid-cols-2 gap-8" style={{ gridAutoRows: '1fr' }}>
             {services.map((s, i) => (
               <Card key={s.title} s={s} index={i} />
             ))}
           </div>
 
+          {/* CTA BUTTON – NO HOVER */}
           <div 
             className={`mt-20 text-center transition-all duration-1000 ease-out ${
               isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
@@ -318,11 +272,11 @@ export default function ServicesSection() {
               </p>
               <button
                 onClick={() => setShowModal(true)}
-                className="px-8 py-4 rounded-xl font-bold transition-transform hover:scale-105"
+                className="px-8 py-4 rounded-xl font-bold"
                 style={{
                   background: `linear-gradient(135deg, ${ACCENT_ORANGE}, ${ACCENT_LIGHT})`,
                   color: '#fff',
-                  boxShadow: `0 12px 32px ${ACCENT_ORANGE}40, inset 0 1px 0 0 rgba(255, 255, 255, 0.2)`,
+                  boxShadow: `0 12px 32px ${ACCENT_ORANGE}40, inset 0 1px 0 0 rgba(255, 255, 0.2)`,
                 }}
               >
                 Get in Touch
@@ -332,14 +286,11 @@ export default function ServicesSection() {
         </div>
       </section>
 
-      {/* Contact Modal */}
+      {/* CONTACT MODAL */}
       {showModal && (
         <div 
           className="fixed inset-0 z-50 flex items-center justify-center p-6"
-          style={{
-            background: 'rgba(0, 0, 0, 0.8)',
-            backdropFilter: 'blur(10px)',
-          }}
+          style={{ background: 'rgba(0, 0, 0, 0.8)', backdropFilter: 'blur(10px)' }}
           onClick={() => setShowModal(false)}
         >
           <div
@@ -353,20 +304,13 @@ export default function ServicesSection() {
           >
             <button
               onClick={() => setShowModal(false)}
-              className="absolute top-6 right-6 w-10 h-10 flex items-center justify-center rounded-lg transition-colors hover:bg-gray-800"
-              style={{
-                background: `${BG_BLACK}80`,
-                border: `1px solid ${BORDER}`,
-                color: TEXT_GRAY,
-              }}
+              className="absolute top-6 right-6 w-10 h-10 flex items-center justify-center rounded-lg hover:bg-gray-800 transition-colors"
+              style={{ background: `${BG_BLACK}80`, border: `1px solid ${BORDER}`, color: TEXT_GRAY }}
             >
               <X className="w-5 h-5" />
             </button>
 
-            <h3 
-              className="text-3xl font-black mb-2"
-              style={{ color: TEXT_WHITE }}
-            >
+            <h3 className="text-3xl font-black mb-2" style={{ color: TEXT_WHITE }}>
               Let&apos;s Work Together
             </h3>
             <p className="text-sm mb-8" style={{ color: TEXT_GRAY }}>
@@ -375,10 +319,7 @@ export default function ServicesSection() {
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label 
-                  className="flex items-center gap-2 text-sm font-bold mb-2"
-                  style={{ color: TEXT_WHITE }}
-                >
+                <label className="flex items-center gap-2 text-sm font-bold mb-2" style={{ color: TEXT_WHITE }}>
                   <User className="w-4 h-4" style={{ color: ACCENT_ORANGE }} />
                   Your Name
                 </label>
@@ -388,7 +329,7 @@ export default function ServicesSection() {
                   value={formData.name}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 rounded-xl text-sm transition-colors focus:border-orange-500"
+                  className="w-full px-4 py-3 rounded-xl text-sm focus:border-orange-500 transition-colors"
                   style={{
                     background: `${BG_BLACK}80`,
                     border: `1px solid ${BORDER}`,
@@ -400,10 +341,7 @@ export default function ServicesSection() {
               </div>
 
               <div>
-                <label 
-                  className="flex items-center gap-2 text-sm font-bold mb-2"
-                  style={{ color: TEXT_WHITE }}
-                >
+                <label className="flex items-center gap-2 text-sm font-bold mb-2" style={{ color: TEXT_WHITE }}>
                   <Mail className="w-4 h-4" style={{ color: ACCENT_ORANGE }} />
                   Email Address
                 </label>
@@ -413,7 +351,7 @@ export default function ServicesSection() {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 rounded-xl text-sm transition-colors focus:border-orange-500"
+                  className="w-full px-4 py-3 rounded-xl text-sm focus:border-orange-500 transition-colors"
                   style={{
                     background: `${BG_BLACK}80`,
                     border: `1px solid ${BORDER}`,
@@ -425,10 +363,7 @@ export default function ServicesSection() {
               </div>
 
               <div>
-                <label 
-                  className="flex items-center gap-2 text-sm font-bold mb-2"
-                  style={{ color: TEXT_WHITE }}
-                >
+                <label className="flex items-center gap-2 text-sm font-bold mb-2" style={{ color: TEXT_WHITE }}>
                   <MessageSquare className="w-4 h-4" style={{ color: ACCENT_ORANGE }} />
                   Message
                 </label>
@@ -438,7 +373,7 @@ export default function ServicesSection() {
                   onChange={handleChange}
                   required
                   rows={5}
-                  className="w-full px-4 py-3 rounded-xl text-sm resize-none transition-colors focus:border-orange-500"
+                  className="w-full px-4 py-3 rounded-xl text-sm resize-none focus:border-orange-500 transition-colors"
                   style={{
                     background: `${BG_BLACK}80`,
                     border: `1px solid ${BORDER}`,
@@ -449,19 +384,20 @@ export default function ServicesSection() {
                 />
               </div>
 
+              {/* CLEAN SEND BUTTON – NO HOVER */}
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl font-bold transition-all"
+                className="w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl font-bold"
                 style={{
                   background: loading 
-                    ? `${BG_BLACK}` 
+                    ? BG_BLACK 
                     : `linear-gradient(135deg, ${ACCENT_ORANGE}, ${ACCENT_LIGHT})`,
                   border: `1px solid ${loading ? BORDER : ACCENT_ORANGE}`,
                   color: '#fff',
                   boxShadow: loading 
                     ? 'none' 
-                    : `0 12px 32px ${ACCENT_ORANGE}40, inset 0 1px 0 0 rgba(255, 255, 255, 0.2)`,
+                    : `0 12px 32px ${ACCENT_ORANGE}40, inset 0 1px 0 0 rgba(255, 255, 0.2)`,
                   opacity: loading ? 0.6 : 1,
                   cursor: loading ? 'not-allowed' : 'pointer',
                 }}
