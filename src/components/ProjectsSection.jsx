@@ -50,7 +50,7 @@ export default function ProjectsSection() {
       tech: ['.NET 8', 'Next.js', 'AWS', 'Razorpay'],
       icon: Rocket,
       color: ACCENT_ORANGE,
-      projectUrl: 'https://new.mahaagromart.com',
+      projectUrl: 'https://mahaagromart.com',
       githubUrl: null,
     },
     {
