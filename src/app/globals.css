@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
 
 :root {
   --background: #ffffff;
@@ -13,6 +14,10 @@
   --muted-foreground: #71717a;
   --border: #e4e4e7;
   --radius: 0.5rem;
+  
+  /* Font families */
+  --font-heading: 'Syne', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -38,7 +43,12 @@
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
   --color-border: var(--border);
-  --font-sans: var(--font-worksans), var(--font-poppins);
+  
+  /* Update font configuration */
+  --font-sans: var(--font-body);
+  --font-heading: var(--font-heading);
+  --font-body: var(--font-body);
+  
   --radius: var(--radius);
 }
 
@@ -54,10 +64,17 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-worksans), var(--font-poppins), system-ui, -apple-system, sans-serif;
+  font-family: var(--font-body), system-ui, -apple-system, sans-serif;
   font-feature-settings: "rlig" 1, "calt" 1;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Heading styles */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading), sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
 }
 
 /* Prevent font flash during load */
@@ -77,5 +94,3 @@ html {
 html.dark {
   color-scheme: dark;
 }
-
-

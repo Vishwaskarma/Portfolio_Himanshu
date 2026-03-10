@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-
 import {
   Mail,
   Phone,
@@ -12,7 +11,8 @@ import {
   X,
   Send,
   User,
-  MessageSquare
+  MessageSquare,
+  Sparkles
 } from 'lucide-react';
 
 const ACCENT_ORANGE = '#F97316';
@@ -22,6 +22,87 @@ const BG_CARD = '#18181B';
 const BORDER = '#27272A';
 const TEXT_WHITE = '#FFFFFF';
 const TEXT_GRAY = '#A1A1AA';
+
+/* Add the same CSS animations from hero */
+const css = `
+  @keyframes pulse-glow {
+    0%,100% { opacity: .28; }
+    50%     { opacity: .48; }
+  }
+
+  @keyframes float-orb {
+    0%,100% { transform: translateY(0px) scale(1); }
+    50%     { transform: translateY(-18px) scale(1.04); }
+  }
+
+  @keyframes morph {
+    0%,100% { border-radius: 60% 40% 70% 30% / 50% 60% 40% 50%; }
+    50%     { border-radius: 40% 60% 30% 70% / 60% 40% 60% 40%; }
+  }
+
+  /* Social icon hover lift - same as hero */
+  .social-btn {
+    transition: transform .28s cubic-bezier(.34,1.56,.64,1),
+                border-color .28s ease,
+                box-shadow .28s ease;
+  }
+  .social-btn:hover {
+    transform: translateY(-4px) scale(1.12);
+    border-color: rgba(249,115,22,.7) !important;
+    box-shadow: 0 8px 24px rgba(249,115,22,.25);
+  }
+  .social-btn:active {
+    transform: translateY(0) scale(.96);
+    transition-duration: .1s;
+  }
+
+  /* Card hover effects */
+  .hover-card {
+    transition: transform .3s cubic-bezier(.34,1.56,.64,1),
+                box-shadow .3s ease,
+                border-color .3s ease;
+  }
+  .hover-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(249,115,22,.5) !important;
+    box-shadow: 0 16px 40px rgba(249,115,22,.15);
+  }
+
+  /* Button ripple effect */
+  .btn-ripple {
+    position: relative; overflow: hidden;
+    transition: transform .25s cubic-bezier(.34,1.56,.64,1),
+                box-shadow .25s ease,
+                filter .25s ease;
+  }
+  .btn-ripple:hover  { transform: translateY(-3px) scale(1.035); filter: brightness(1.08); }
+  .btn-ripple:active { transform: translateY(0px)  scale(.97);   transition-duration: .1s; }
+  .btn-ripple::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(circle, rgba(255,255,255,.18) 0%, transparent 70%);
+    opacity: 0; transition: opacity .3s;
+    pointer-events: none;
+  }
+  .btn-ripple:hover::after { opacity: 1; }
+
+  /* Input focus ring */
+  .modal-input {
+    transition: border-color .2s, box-shadow .2s;
+  }
+  .modal-input:focus {
+    outline: none;
+    border-color: rgba(249,115,22,.7) !important;
+    box-shadow: 0 0 0 3px rgba(249,115,22,.15);
+  }
+
+  /* Modal fade */
+  @keyframes modal-in {
+    from { opacity: 0; transform: scale(.93) translateY(16px); }
+    to   { opacity: 1; transform: scale(1)   translateY(0); }
+  }
+  .modal-box { animation: modal-in .35s cubic-bezier(.16,1,.3,1) forwards; }
+`;
 
 export default function ContactSection() {
   const [showModal, setShowModal] = useState(false);
@@ -96,20 +177,20 @@ export default function ContactSection() {
   const InfoCard = ({ c }) => (
     <div className="text-center transition-all duration-300 hover:scale-105">
       <div
-        className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl relative"
+        className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl relative group"
         style={{ background: ACCENT_ORANGE + '20' }}
       >
-        <c.Icon className="h-8 w-8 relative z-10" style={{ color: ACCENT_ORANGE }} />
+        <c.Icon className="h-8 w-8 relative z-10 transition-all duration-300 group-hover:scale-110 group-hover:rotate-3" style={{ color: ACCENT_ORANGE }} />
         <div 
-          className="absolute inset-0 rounded-2xl blur-md opacity-30"
+          className="absolute inset-0 rounded-2xl blur-md opacity-30 group-hover:opacity-60 transition-opacity duration-300"
           style={{ background: ACCENT_ORANGE }}
         />
       </div>
-      <h3 className="text-xl font-bold mb-2" style={{ color: TEXT_WHITE }}>
+      <h3 className="text-xl font-bold mb-2 transition-colors duration-300 hover:text-orange-500" style={{ color: TEXT_WHITE }}>
         {c.title}
       </h3>
-      <p className="font-medium mb-1 text-sm" style={{ color: ACCENT_LIGHT }}>{c.value}</p>
-      <p className="text-sm" style={{ color: TEXT_GRAY }}>
+      <p className="font-medium mb-1 text-sm transition-all duration-300 hover:scale-105" style={{ color: ACCENT_LIGHT }}>{c.value}</p>
+      <p className="text-sm transition-colors duration-300 hover:text-white" style={{ color: TEXT_GRAY }}>
         {c.note}
       </p>
     </div>
@@ -117,29 +198,85 @@ export default function ContactSection() {
 
   return (
     <>
-      <section id="contact" className="py-32 px-6" style={{ background: BG_BLACK }}>
-        <div className="mx-auto max-w-6xl">
+      <style>{css}</style>
+      <section id="contact" className="relative py-32 px-6 overflow-hidden" style={{ background: BG_BLACK }}>
+        {/* Background orbs - same as hero */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div 
+            className="absolute top-20 right-20 w-[28rem] h-[28rem] rounded-full opacity-10"
+            style={{
+              background: `radial-gradient(circle, ${ACCENT_ORANGE}, transparent)`,
+              filter: 'blur(90px)',
+              animation: 'float-orb 13s ease-in-out infinite',
+            }}
+          />
+          <div 
+            className="absolute bottom-20 left-20 w-[24rem] h-[24rem] rounded-full opacity-8"
+            style={{
+              background: `radial-gradient(circle, ${ACCENT_LIGHT}, transparent)`,
+              filter: 'blur(80px)',
+              animation: 'float-orb 15s ease-in-out infinite reverse',
+            }}
+          />
+          <div 
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full opacity-5"
+            style={{
+              background: `radial-gradient(circle, ${ACCENT_ORANGE}, transparent)`,
+              filter: 'blur(60px)',
+              animation: 'morph 22s ease-in-out infinite',
+            }}
+          />
+          
+          {/* Grid pattern */}
+          <div 
+            className="absolute inset-0 opacity-3"
+            style={{
+              backgroundImage: `radial-gradient(circle at 2px 2px, ${BORDER} 1.5px, transparent 0)`,
+              backgroundSize: '48px 48px',
+            }}
+          />
+        </div>
+
+        <div className="mx-auto max-w-6xl relative z-10">
+          {/* Header with badge */}
           <div className="text-center mb-20">
-            <h2
-              className="text-5xl md:text-6xl font-bold mb-6"
+            <div 
+              className="inline-flex items-center gap-3 px-6 py-3 rounded-full mb-8 hover-card"
               style={{
-                background: `linear-gradient(90deg, ${ACCENT_ORANGE} 0%, ${ACCENT_LIGHT} 100%)`,
+                background: `linear-gradient(135deg, ${ACCENT_ORANGE}12, ${ACCENT_LIGHT}08)`,
+                border: `1px solid ${ACCENT_ORANGE}30`,
+                boxShadow: `0 8px 32px ${ACCENT_ORANGE}20`,
+              }}
+            >
+              <Sparkles className="w-5 h-5" style={{ color: ACCENT_ORANGE }} />
+              <span className="text-sm font-black tracking-widest uppercase" style={{ color: ACCENT_LIGHT }}>
+                Get In Touch
+              </span>
+            </div>
+
+            <h2
+              className="text-6xl md:text-7xl font-black mb-6 leading-tight"
+              style={{
+                background: `linear-gradient(135deg, ${TEXT_WHITE} 0%, ${ACCENT_LIGHT} 50%, ${ACCENT_ORANGE} 100%)`,
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
               }}
             >
-              Let's Build Something Amazing
+              Let's Build Something
+              <br />
+              Amazing Together
             </h2>
             <p className="text-xl max-w-3xl mx-auto" style={{ color: TEXT_GRAY }}>
               Ready to turn ideas into reality? Let's discuss your next project and create something extraordinary together.
             </p>
           </div>
 
+          {/* Info Cards with hover-card class */}
           <div className="grid lg:grid-cols-3 gap-8 mb-24">
             {cards.map((c) => (
               <div
                 key={c.title}
-                className="rounded-3xl p-8 shadow-lg backdrop-blur-sm transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
+                className="rounded-3xl p-8 shadow-lg backdrop-blur-sm hover-card"
                 style={{ 
                   background: `linear-gradient(135deg, ${BG_CARD} 0%, ${BG_BLACK} 100%)`,
                   border: `1px solid ${BORDER}` 
@@ -150,8 +287,9 @@ export default function ContactSection() {
             ))}
           </div>
 
+          {/* Main CTA Card */}
           <div
-            className="rounded-3xl p-12 text-center shadow-2xl backdrop-blur-sm relative overflow-hidden"
+            className="rounded-3xl p-12 text-center shadow-2xl backdrop-blur-sm relative overflow-hidden hover-card"
             style={{ 
               background: `linear-gradient(135deg, ${BG_CARD} 0%, ${BG_BLACK} 100%)`,
               border: `1px solid ${BORDER}` 
@@ -181,17 +319,16 @@ export default function ContactSection() {
               <div className="flex flex-wrap justify-center gap-6 mb-12">
                 <button
                   onClick={() => setShowModal(true)}
-                  className="group flex items-center gap-3 px-10 py-5 rounded-2xl font-bold transition-all duration-300
-                             hover:shadow-2xl hover:scale-105 hover:-translate-y-1 relative overflow-hidden"
+                  className="group btn-ripple flex items-center gap-3 px-10 py-5 rounded-2xl font-bold"
                   style={{
-                    background: `linear-gradient(90deg, ${ACCENT_ORANGE}, ${ACCENT_LIGHT})`,
+                    background: `linear-gradient(110deg, ${ACCENT_ORANGE} 0%, ${ACCENT_LIGHT} 50%, ${ACCENT_ORANGE} 100%)`,
+                    backgroundSize: '200% 100%',
                     color: TEXT_WHITE,
+                    boxShadow: `0 16px 36px rgba(249,115,22,.4)`,
                   }}
                 >
-                  <span className="relative z-10">Start a Project</span>
-                  <ArrowRight className="h-5 w-5 relative z-10 group-hover:translate-x-1 transition-transform" />
-                  
-                  <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-12" />
+                  <span>Start a Project</span>
+                  <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </button>
                 
                 <button
@@ -201,12 +338,12 @@ export default function ContactSection() {
                     link.download = 'Himanshu_Vishwakarma_Resume.pdf';
                     link.click();
                   }}
-                  className="group flex items-center gap-3 px-10 py-5 rounded-2xl font-bold transition-all duration-300
-                             hover:shadow-2xl hover:scale-105 hover:-translate-y-1 backdrop-blur-sm"
+                  className="group btn-ripple flex items-center gap-3 px-10 py-5 rounded-2xl font-bold"
                   style={{
-                    background: BG_CARD,
-                    border: `2px solid ${ACCENT_ORANGE}40`,
+                    background: `rgba(24,24,27,.7)`,
+                    border: `1.5px solid rgba(249,115,22,.45)`,
                     color: TEXT_WHITE,
+                    backdropFilter: 'blur(8px)',
                   }}
                 >
                   <Download className="h-5 w-5 group-hover:translate-y-1 transition-transform" />
@@ -225,20 +362,17 @@ export default function ContactSection() {
                       href={social.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group flex items-center gap-3 p-4 rounded-xl transition-all duration-300 hover:scale-110 hover:-translate-y-1"
+                      className="social-btn flex items-center gap-3 p-4 rounded-xl"
                       style={{
-                        background: ACCENT_ORANGE + '15',
-                        border: `1px solid ${ACCENT_ORANGE}30`,
+                        background: `${BG_CARD}CC`,
+                        border: `1px solid rgba(249,115,22,.2)`,
+                        backdropFilter: 'blur(10px)',
                       }}
                     >
                       <div className="relative">
                         <social.Icon 
                           className="h-6 w-6 transition-colors" 
-                          style={{ color: ACCENT_ORANGE }} 
-                        />
-                        <div 
-                          className="absolute inset-0 rounded-full blur-md opacity-0 group-hover:opacity-60 transition-opacity"
-                          style={{ background: ACCENT_ORANGE }}
+                          style={{ color: TEXT_GRAY }} 
                         />
                       </div>
                       <div className="text-left">
@@ -256,54 +390,49 @@ export default function ContactSection() {
             </div>
           </div>
 
+          {/* Footer */}
           <div className="text-center mt-16">
             <p className="text-sm" style={{ color: TEXT_GRAY }}>
               Based in Mumbai, Maharashtra · Available for remote opportunities worldwide
             </p>
             <div className="mt-4 flex items-center justify-center gap-2">
-              <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: ACCENT_ORANGE }} />
+              <div className="w-2 h-2 rounded-full animate-pulse" style={{ 
+                background: ACCENT_ORANGE,
+                boxShadow: `0 0 8px ${ACCENT_ORANGE}`,
+                animation: 'pulse-glow 2s infinite'
+              }} />
               <p className="text-sm font-semibold" style={{ color: ACCENT_LIGHT }}>
                 Currently open to new opportunities
               </p>
             </div>
           </div>
         </div>
-
-        <style>{`
-          @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-          }
-          .animate-pulse {
-            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-          }
-        `}</style>
       </section>
 
-      {/* Contact Modal */}
+      {/* Contact Modal with hero styling */}
       {showModal && (
         <div 
           className="fixed inset-0 z-50 flex items-center justify-center p-6"
           style={{
             background: 'rgba(0, 0, 0, 0.8)',
-            backdropFilter: 'blur(10px)',
+            backdropFilter: 'blur(12px)',
           }}
           onClick={() => setShowModal(false)}
         >
           <div
-            className="relative w-full max-w-lg rounded-2xl p-8"
+            className="modal-box relative w-full max-w-lg rounded-2xl p-8"
             style={{
-              background: `linear-gradient(135deg, ${BG_CARD}98 0%, ${BG_BLACK}99 100%)`,
-              border: `1px solid ${BORDER}`,
-              boxShadow: '0 24px 60px rgba(0, 0, 0, 0.7)',
+              background: `linear-gradient(145deg, ${BG_CARD} 0%, ${BG_BLACK} 100%)`,
+              border: `1px solid rgba(249,115,22,.25)`,
+              boxShadow: '0 32px 80px rgba(0,0,0,.7), 0 0 60px rgba(249,115,22,.08)',
             }}
             onClick={(e) => e.stopPropagation()}
           >
             <button
               onClick={() => setShowModal(false)}
-              className="absolute top-6 right-6 w-10 h-10 flex items-center justify-center rounded-lg transition-colors hover:bg-gray-800"
+              className="btn-ripple absolute top-6 right-6 w-10 h-10 flex items-center justify-center rounded-lg"
               style={{
-                background: `${BG_BLACK}80`,
+                background: `rgba(255,255,255,.06)`,
                 border: `1px solid ${BORDER}`,
                 color: TEXT_GRAY,
               }}
@@ -329,12 +458,11 @@ export default function ContactSection() {
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 rounded-xl text-sm"
+                  className="modal-input w-full px-4 py-3 rounded-xl text-sm"
                   style={{
-                    background: `${BG_BLACK}80`,
+                    background: `rgba(9,9,11,.6)`,
                     border: `1px solid ${BORDER}`,
                     color: TEXT_WHITE,
-                    outline: 'none',
                   }}
                   placeholder="John Doe"
                 />
@@ -350,12 +478,11 @@ export default function ContactSection() {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 rounded-xl text-sm"
+                  className="modal-input w-full px-4 py-3 rounded-xl text-sm"
                   style={{
-                    background: `${BG_BLACK}80`,
+                    background: `rgba(9,9,11,.6)`,
                     border: `1px solid ${BORDER}`,
                     color: TEXT_WHITE,
-                    outline: 'none',
                   }}
                   placeholder="john@example.com"
                 />
@@ -371,12 +498,11 @@ export default function ContactSection() {
                   value={formData.message}
                   onChange={handleChange}
                   rows={5}
-                  className="w-full px-4 py-3 rounded-xl text-sm resize-none"
+                  className="modal-input w-full px-4 py-3 rounded-xl text-sm resize-none"
                   style={{
-                    background: `${BG_BLACK}80`,
+                    background: `rgba(9,9,11,.6)`,
                     border: `1px solid ${BORDER}`,
                     color: TEXT_WHITE,
-                    outline: 'none',
                   }}
                   placeholder="Tell me about your project..."
                 />
@@ -385,22 +511,41 @@ export default function ContactSection() {
               <button
                 onClick={handleSubmit}
                 disabled={loading}
-                className="w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl font-bold"
+                className="btn-ripple w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl font-bold"
                 style={{
-                  background: loading ? `${BG_BLACK}` : `linear-gradient(135deg, ${ACCENT_ORANGE}, ${ACCENT_LIGHT})`,
-                  border: `1px solid ${loading ? BORDER : ACCENT_ORANGE}`,
+                  background: loading 
+                    ? `rgba(249,115,22,.4)`
+                    : `linear-gradient(110deg, ${ACCENT_ORANGE}, ${ACCENT_LIGHT})`,
                   color: '#fff',
-                  boxShadow: loading ? 'none' : `0 12px 32px ${ACCENT_ORANGE}40`,
-                  opacity: loading ? 0.6 : 1,
+                  boxShadow: loading ? 'none' : `0 12px 30px rgba(249,115,22,.35)`,
+                  opacity: loading ? 0.7 : 1,
                   cursor: loading ? 'not-allowed' : 'pointer',
                 }}
               >
-                {loading ? 'Sending...' : <><Send className="w-5 h-5" />Send Message</>}
+                {loading ? (
+                  <>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ animation: 'spin 1s linear infinite' }}>
+                      <path d="M21 12a9 9 0 11-6.219-8.56" />
+                    </svg>
+                    Sending…
+                  </>
+                ) : (
+                  <>
+                    <Send className="w-5 h-5" />
+                    Send Message
+                  </>
+                )}
               </button>
             </div>
           </div>
         </div>
       )}
+
+      <style>{`
+        @keyframes spin {
+          to { transform: rotate(360deg); }
+        }
+      `}</style>
     </>
   );
 }

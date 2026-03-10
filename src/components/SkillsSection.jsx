@@ -22,6 +22,144 @@ const TEXT_WHITE = '#FFFFFF';
 const TEXT_GRAY = '#A1A1AA';
 /* ─────────────────────────────────────────────────────────── */
 
+/* Add the same CSS animations from hero */
+const css = `
+  @keyframes pulse-glow {
+    0%,100% { opacity: .28; }
+    50%     { opacity: .48; }
+  }
+
+  @keyframes float-particle {
+    0%   { transform: translateY(100vh); opacity: 0; }
+    8%   { opacity: .6; }
+    92%  { opacity: .6; }
+    100% { transform: translateY(-120px); opacity: 0; }
+  }
+
+  @keyframes float-orb {
+    0%,100% { transform: translateY(0px) scale(1); }
+    50%     { transform: translateY(-18px) scale(1.04); }
+  }
+
+  @keyframes morph {
+    0%,100% { border-radius: 60% 40% 70% 30% / 50% 60% 40% 50%; }
+    50%     { border-radius: 40% 60% 30% 70% / 60% 40% 60% 40%; }
+  }
+
+  /* Social icon hover lift - same as hero */
+  .social-btn {
+    transition: transform .28s cubic-bezier(.34,1.56,.64,1),
+                border-color .28s ease,
+                box-shadow .28s ease;
+  }
+  .social-btn:hover {
+    transform: translateY(-4px) scale(1.12);
+    border-color: rgba(249,115,22,.7) !important;
+    box-shadow: 0 8px 24px rgba(249,115,22,.25);
+  }
+  .social-btn:active {
+    transform: translateY(0) scale(.96);
+    transition-duration: .1s;
+  }
+
+  /* Card hover effects */
+  .hover-card {
+    transition: transform .3s cubic-bezier(.34,1.56,.64,1),
+                box-shadow .3s ease,
+                border-color .3s ease;
+  }
+  .hover-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(249,115,22,.5) !important;
+    box-shadow: 0 16px 40px rgba(249,115,22,.15);
+  }
+
+  /* Tech tag hover */
+  .tech-tag {
+    transition: transform .28s cubic-bezier(.34,1.56,.64,1),
+                border-color .28s ease,
+                box-shadow .28s ease,
+                background-color .28s ease;
+  }
+  .tech-tag:hover {
+    transform: translateY(-3px) scale(1.08);
+    border-color: ${ACCENT_ORANGE} !important;
+    box-shadow: 0 6px 16px rgba(249,115,22,.25);
+    background-color: rgba(249,115,22,0.15) !important;
+  }
+
+  /* Button ripple effect */
+  .btn-ripple {
+    position: relative; overflow: hidden;
+    transition: transform .25s cubic-bezier(.34,1.56,.64,1),
+                box-shadow .25s ease,
+                filter .25s ease;
+  }
+  .btn-ripple:hover  { transform: translateY(-3px) scale(1.035); filter: brightness(1.08); }
+  .btn-ripple:active { transform: translateY(0px)  scale(.97);   transition-duration: .1s; }
+  .btn-ripple::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(circle, rgba(255,255,255,.18) 0%, transparent 70%);
+    opacity: 0; transition: opacity .3s;
+    pointer-events: none;
+  }
+  .btn-ripple:hover::after { opacity: 1; }
+
+  /* Category tab hover */
+  .category-tab {
+    transition: transform .28s cubic-bezier(.34,1.56,.64,1),
+                border-color .28s ease,
+                box-shadow .28s ease,
+                background .28s ease;
+  }
+  .category-tab:hover {
+    transform: translateY(-3px) scale(1.02);
+    border-color: currentColor !important;
+    box-shadow: 0 8px 20px currentColor 30;
+  }
+
+  /* Shimmer animation */
+  @keyframes shimmer {
+    0%, 100% {
+      transform: translateX(-100%);
+      opacity: 0;
+    }
+    50% {
+      transform: translateX(0%);
+      opacity: 1;
+    }
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translate(0, 0);
+    }
+    50% {
+      transform: translate(30px, -30px);
+    }
+  }
+
+  .animate-float {
+    animation: float 20s ease-in-out infinite;
+  }
+
+  /* GPU Acceleration */
+  .group, button {
+    will-change: transform;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+`;
+
 export default function SkillsSection() {
   const [isVisible, setIsVisible] = useState(false);
   const [activeCategory, setActiveCategory] = useState(0);
@@ -96,175 +234,179 @@ export default function SkillsSection() {
       ],
     },
   ];
+const SkillCard = ({ skill, categoryColor, categoryGradient, index }) => {
+  const [isHovered, setIsHovered] = useState(false);
 
-  const SkillCard = ({ skill, categoryColor, categoryGradient, index }) => {
-    const isHovered = hoveredSkill === `${skill.name}-${index}`;
-
-    return (
+  return (
+    <div
+      className={`group relative transition-all duration-500 ease-out ${
+        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+      }`}
+      style={{ 
+        transitionDelay: `${index * 80}ms`,
+      }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {/* Premium Skill Card */}
       <div
-        className={`group relative transition-all duration-700 ease-out ${
-          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-        }`}
-        style={{ 
-          transitionDelay: `${index * 80}ms`,
+        className="relative rounded-2xl p-6 overflow-hidden h-full flex flex-col"
+        style={{
+          background: `linear-gradient(135deg, ${BG_CARD}98 0%, ${BG_BLACK}99 100%)`,
+          border: `1px solid ${isHovered ? categoryColor : BORDER}`,
+          boxShadow: isHovered
+            ? `0 24px 48px -12px ${categoryColor}30, 0 0 0 1px ${categoryColor}20, inset 0 1px 0 0 rgba(255,255,255,0.05)`
+            : `0 8px 24px -8px rgba(0, 0, 0, 0.6), inset 0 1px 0 0 rgba(255,255,255,0.02)`,
+          transform: isHovered ? 'translateY(-4px)' : 'translateY(0)',
+          transition: 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.2s ease, box-shadow 0.2s ease',
+          willChange: 'transform',
         }}
-        onMouseEnter={() => setHoveredSkill(`${skill.name}-${index}`)}
-        onMouseLeave={() => setHoveredSkill(null)}
       >
-        {/* Premium Skill Card */}
-        <div
-          className="relative rounded-2xl p-6 overflow-hidden h-full flex flex-col"
+        {/* Gradient Overlay - Removed opacity transition that causes flicker */}
+        <div 
+          className="absolute inset-0 bg-gradient-to-br"
           style={{
-            background: `linear-gradient(135deg, ${BG_CARD}98 0%, ${BG_BLACK}99 100%)`,
-            border: `1px solid ${isHovered ? categoryColor : BORDER}`,
-            boxShadow: isHovered
-              ? `0 24px 48px -12px ${categoryColor}30, 0 0 0 1px ${categoryColor}20, inset 0 1px 0 0 rgba(255,255,255,0.05)`
-              : `0 8px 24px -8px rgba(0, 0, 0, 0.6), inset 0 1px 0 0 rgba(255,255,255,0.02)`,
-            transform: isHovered ? 'translateY(-6px)' : 'translateY(0)',
-            transition: 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
-            willChange: 'transform',
-            backfaceVisibility: 'hidden',
+            background: `linear-gradient(135deg, ${categoryColor}15, transparent)`,
+            opacity: isHovered ? 0.6 : 0,
+            transition: 'opacity 0.3s ease',
+            pointerEvents: 'none',
           }}
-        >
-          {/* Gradient Overlay */}
-          <div 
-            className={`absolute inset-0 bg-gradient-to-br ${categoryGradient} transition-opacity duration-700 ease-in-out`}
-            style={{
-              opacity: isHovered ? 1 : 0,
-            }}
-          />
+        />
 
-          {/* Content */}
-          <div className="relative z-10 flex-1 flex flex-col">
-            {/* Header */}
-            <div className="flex items-start justify-between mb-4">
-              <div className="flex-1">
-                <h3 
-                  className="text-lg font-black mb-1 transition-colors duration-500"
-                  style={{ 
-                    color: isHovered ? categoryColor : TEXT_WHITE,
-                    letterSpacing: '-0.01em',
-                  }}
-                >
-                  {skill.name}
-                </h3>
-                <p className="text-xs font-medium" style={{ color: TEXT_GRAY }}>
-                  {skill.experience}
-                </p>
-              </div>
-
-              {/* Badge */}
-              <div 
-                className="px-3 py-1 rounded-full text-xs font-bold transition-all duration-500"
-                style={{
-                  background: `${categoryColor}20`,
-                  border: `1px solid ${categoryColor}40`,
-                  color: categoryColor,
-                  opacity: isHovered ? 1 : 0,
-                  transform: isHovered ? 'scale(1)' : 'scale(0.8)',
+        {/* Content */}
+        <div className="relative z-10 flex-1 flex flex-col">
+          {/* Header */}
+          <div className="flex items-start justify-between mb-4">
+            <div className="flex-1">
+              <h3 
+                className="text-lg font-black mb-1"
+                style={{ 
+                  color: isHovered ? categoryColor : TEXT_WHITE,
+                  transition: 'color 0.2s ease',
                 }}
               >
-                {skill.projects}+ Projects
-              </div>
+                {skill.name}
+              </h3>
+              <p className="text-xs font-medium" style={{ color: TEXT_GRAY }}>
+                {skill.experience}
+              </p>
             </div>
 
-            {/* Premium Progress Bar */}
-            <div className="space-y-3 mt-auto">
-              <div className="flex justify-between items-center">
-                <span className="text-xs font-semibold" style={{ color: TEXT_GRAY }}>
-                  Proficiency
-                </span>
-                <span 
-                  className="text-lg font-black transition-all duration-500"
-                  style={{ 
-                    color: isHovered ? categoryColor : ACCENT_LIGHT,
-                    transform: isHovered ? 'scale(1.15)' : 'scale(1)',
-                  }}
-                >
-                  {skill.level}%
-                </span>
-              </div>
-
-              {/* Enhanced Progress Bar */}
-              <div 
-                className="w-full h-2.5 rounded-full relative overflow-hidden"
-                style={{ 
-                  background: `${BG_BLACK}`,
-                  boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.5)',
-                }}
-              >
-                {/* Background glow */}
-                <div
-                  className="absolute inset-0 transition-opacity duration-700"
-                  style={{
-                    background: `linear-gradient(90deg, ${categoryColor}20, transparent)`,
-                    opacity: isHovered ? 1 : 0,
-                  }}
-                />
-
-                {/* Progress fill */}
-                <div
-                  className="h-full rounded-full relative transition-all duration-1000 ease-out"
-                  style={{
-                    width: isVisible ? `${skill.level}%` : '0%',
-                    background: `linear-gradient(90deg, ${categoryColor}, ${ACCENT_LIGHT})`,
-                    boxShadow: `0 0 12px ${categoryColor}60`,
-                  }}
-                >
-                  {/* Shimmer effect */}
-                  <div 
-                    className="absolute inset-0 rounded-full overflow-hidden"
-                    style={{
-                      animation: isHovered ? 'shimmer 2s ease-in-out infinite' : 'none',
-                      background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)',
-                    }}
-                  />
-                </div>
-              </div>
+            {/* Badge - Simplified animation */}
+            <div 
+              className="px-3 py-1 rounded-full text-xs font-bold"
+              style={{
+                background: `${categoryColor}20`,
+                border: `1px solid ${categoryColor}40`,
+                color: categoryColor,
+                opacity: isHovered ? 1 : 0,
+                transform: isHovered ? 'scale(1)' : 'scale(0.9)',
+                transition: 'opacity 0.2s ease, transform 0.2s ease',
+                pointerEvents: 'none',
+              }}
+            >
+              {skill.projects}+ Projects
             </div>
           </div>
 
-          {/* Corner accent */}
-          <div 
-            className="absolute bottom-0 right-0 w-24 h-24 transition-opacity duration-700 ease-in-out pointer-events-none"
-            style={{
-              opacity: isHovered ? 0.2 : 0,
-              background: `radial-gradient(circle at bottom right, ${categoryColor}, transparent 70%)`,
-              filter: 'blur(30px)',
-            }}
-          />
+          {/* Progress Bar Section */}
+          <div className="space-y-2 mt-auto">
+            <div className="flex justify-between items-center">
+              <span className="text-xs font-semibold" style={{ color: TEXT_GRAY }}>
+                Proficiency
+              </span>
+              <span 
+                className="text-lg font-black"
+                style={{ 
+                  color: isHovered ? categoryColor : ACCENT_LIGHT,
+                  transition: 'color 0.2s ease',
+                }}
+              >
+                {skill.level}%
+              </span>
+            </div>
+
+            {/* Progress Bar - Simplified */}
+            <div 
+              className="w-full h-2 rounded-full relative overflow-hidden"
+              style={{ 
+                background: BG_BLACK,
+              }}
+            >
+              {/* Progress fill */}
+              <div
+                className="h-full rounded-full absolute top-0 left-0"
+                style={{
+                  width: isVisible ? `${skill.level}%` : '0%',
+                  background: `linear-gradient(90deg, ${categoryColor}, ${ACCENT_LIGHT})`,
+                  boxShadow: isHovered ? `0 0 8px ${categoryColor}` : 'none',
+                  transition: 'width 0.8s ease-out, box-shadow 0.2s ease',
+                }}
+              />
+            </div>
+          </div>
         </div>
+
+        {/* Corner accent - Simplified */}
+        <div 
+          className="absolute bottom-0 right-0 w-24 h-24 pointer-events-none"
+          style={{
+            opacity: isHovered ? 0.15 : 0,
+            background: `radial-gradient(circle at bottom right, ${categoryColor}, transparent 70%)`,
+            filter: 'blur(20px)',
+            transition: 'opacity 0.3s ease',
+          }}
+        />
       </div>
-    );
-  };
+    </div>
+  );
+};
 
   return (
     <section id="skills" className="relative py-32 px-6 overflow-hidden" style={{ background: BG_BLACK }}>
-      {/* Ambient Background */}
+      <style>{css}</style>
+      
+      {/* Ambient Background with hero-style orbs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div 
-          className="absolute inset-0 opacity-5"
-          style={{
-            backgroundImage: `radial-gradient(circle at 2px 2px, ${BORDER} 1px, transparent 0)`,
-            backgroundSize: '40px 40px',
-          }}
-        />
-        
+        {/* Floating orbs */}
         <div 
           className="absolute top-40 left-40 w-96 h-96 rounded-full blur-3xl opacity-20 animate-float"
           style={{ background: `radial-gradient(circle, ${ACCENT_ORANGE}, transparent)` }}
         />
+        <div 
+          className="absolute bottom-40 right-40 w-80 h-80 rounded-full blur-3xl opacity-15"
+          style={{ 
+            background: `radial-gradient(circle, ${ACCENT_LIGHT}, transparent)`,
+            animation: 'float-orb 13s ease-in-out infinite',
+          }}
+        />
+        <div 
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full blur-3xl opacity-10"
+          style={{ 
+            background: `radial-gradient(circle, ${ACCENT_ORANGE}, transparent)`,
+            animation: 'morph 22s ease-in-out infinite',
+          }}
+        />
+        
+        {/* Grid pattern */}
+        <div 
+          className="absolute inset-0 opacity-5"
+          style={{
+            backgroundImage: `linear-gradient(${ACCENT_ORANGE} 1px, transparent 1px), linear-gradient(90deg, ${ACCENT_ORANGE} 1px, transparent 1px)`,
+            backgroundSize: '40px 40px',
+          }}
+        />
       </div>
 
       <div className="mx-auto max-w-7xl relative z-10">
-        {/* Premium Header */}
+        {/* Premium Header with pulse glow */}
         <div 
           className={`text-center mb-24 transition-all duration-1000 ease-out ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}
         >
           <div 
-            className="inline-flex items-center gap-3 px-6 py-3 rounded-full mb-8 backdrop-blur-xl"
+            className="inline-flex items-center gap-3 px-6 py-3 rounded-full mb-8 backdrop-blur-xl hover-card"
             style={{
               background: `linear-gradient(135deg, ${ACCENT_ORANGE}15, ${ACCENT_LIGHT}10)`,
               border: `1px solid ${ACCENT_ORANGE}30`,
@@ -302,7 +444,7 @@ export default function SkillsSection() {
           </p>
         </div>
 
-        {/* Categories with Tabs */}
+        {/* Categories with Tabs - Added category-tab class */}
         <div 
           className={`flex flex-wrap gap-3 justify-center mb-16 transition-all duration-1000 ease-out ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
@@ -317,7 +459,7 @@ export default function SkillsSection() {
               <button
                 key={cat.category}
                 onClick={() => setActiveCategory(idx)}
-                className="group/tab transition-all duration-500 ease-out"
+                className="group/tab transition-all duration-500 ease-out category-tab"
                 style={{
                   padding: '12px 24px',
                   borderRadius: '16px',
@@ -329,7 +471,6 @@ export default function SkillsSection() {
                   boxShadow: isActive 
                     ? `0 12px 32px ${cat.color}30, inset 0 1px 0 0 rgba(255,255,255,0.1)`
                     : '0 4px 12px rgba(0, 0, 0, 0.4)',
-                  transform: isActive ? 'translateY(-2px)' : 'translateY(0)',
                 }}
               >
                 <div className="flex items-center gap-2">
@@ -362,11 +503,12 @@ export default function SkillsSection() {
           >
             {/* Category Header */}
             <div 
-              className="flex items-center gap-4 mb-10"
+              className="flex items-center gap-4 mb-10 hover-card p-4 rounded-2xl"
               style={{
                 opacity: activeCategory === catIdx ? 1 : 0,
                 transform: activeCategory === catIdx ? 'translateX(0)' : 'translateX(-20px)',
                 transition: 'all 0.7s ease-out',
+                border: `1px solid transparent`,
               }}
             >
               <div 
@@ -414,7 +556,7 @@ export default function SkillsSection() {
           style={{ transitionDelay: '800ms' }}
         >
           <div 
-            className="p-10 rounded-3xl backdrop-blur-xl relative overflow-hidden"
+            className="p-10 rounded-3xl backdrop-blur-xl relative overflow-hidden hover-card"
             style={{
               background: `linear-gradient(135deg, ${BG_CARD}95 0%, ${BG_BLACK}98 100%)`,
               border: `1px solid ${BORDER}`,
@@ -451,7 +593,7 @@ export default function SkillsSection() {
                 ].map((method, idx) => (
                   <div
                     key={method}
-                    className="group/method transition-all duration-500 ease-out hover:translate-y-[-2px]"
+                    className="group/method transition-all duration-500 ease-out tech-tag"
                     style={{
                       padding: '12px 20px',
                       borderRadius: '12px',
@@ -477,13 +619,13 @@ export default function SkillsSection() {
                   { value: '2+', label: 'Years Experience', icon: Award },
                   { value: '15+', label: 'Projects Delivered', icon: Sparkles },
                 ].map((stat, idx) => (
-                  <div key={stat.label} className="text-center">
+                  <div key={stat.label} className="text-center group">
                     <stat.icon 
-                      className="w-8 h-8 mx-auto mb-3"
+                      className="w-8 h-8 mx-auto mb-3 transition-all duration-300 group-hover:scale-110 group-hover:rotate-3"
                       style={{ color: ACCENT_ORANGE }}
                     />
                     <div 
-                      className="text-4xl font-black mb-2"
+                      className="text-4xl font-black mb-2 transition-all duration-300 group-hover:scale-105"
                       style={{
                         background: `linear-gradient(135deg, ${TEXT_WHITE}, ${ACCENT_LIGHT})`,
                         WebkitBackgroundClip: 'text',
@@ -493,7 +635,7 @@ export default function SkillsSection() {
                       {stat.value}
                     </div>
                     <div 
-                      className="text-sm font-bold"
+                      className="text-sm font-bold transition-all duration-300 group-hover:text-white"
                       style={{ color: TEXT_GRAY }}
                     >
                       {stat.label}
@@ -505,48 +647,6 @@ export default function SkillsSection() {
           </div>
         </div>
       </div>
-
-      {/* Performance-Optimized Animations */}
-      <style jsx>{`
-        @keyframes shimmer {
-          0%, 100% {
-            transform: translateX(-100%);
-            opacity: 0;
-          }
-          50% {
-            transform: translateX(0%);
-            opacity: 1;
-          }
-        }
-
-        @keyframes float {
-          0%, 100% {
-            transform: translate(0, 0);
-          }
-          50% {
-            transform: translate(30px, -30px);
-          }
-        }
-
-        .animate-float {
-          animation: float 20s ease-in-out infinite;
-        }
-
-        /* GPU Acceleration */
-        .group, button {
-          will-change: transform;
-          transform: translateZ(0);
-          backface-visibility: hidden;
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-          *, *::before, *::after {
-            animation-duration: 0.01ms !important;
-            animation-iteration-count: 1 !important;
-            transition-duration: 0.01ms !important;
-          }
-        }
-      `}</style>
     </section>
   );
 }
